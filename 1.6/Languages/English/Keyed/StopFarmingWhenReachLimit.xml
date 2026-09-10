@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <SFRL_MenuPausedSowing>Sowing paused by inventory limit</SFRL_MenuPausedSowing>
+  <SFRL_MenuPausedHarvest>Harvesting paused by inventory limit</SFRL_MenuPausedHarvest>
   <SFRL_Enabled>Enable inventory farming limits</SFRL_Enabled>
   <SFRL_EnabledTip>Disabling this releases all inventory restrictions immediately. Manual settings and remembered hysteresis states are preserved.</SFRL_EnabledTip>
   <SFRL_ControlSowing>Automatically pause and resume sowing</SFRL_ControlSowing>

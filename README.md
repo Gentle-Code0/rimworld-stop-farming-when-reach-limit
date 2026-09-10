@@ -2,6 +2,15 @@
 
 作者沿用 visitor-spot：`"GentleCode"`。适用于 RimWorld **1.6**，开发时对照本机 **1.6.4871 rev590**。
 
+## 1.1 界面改进
+
+- 设置表格分别显示植物和产物的 **32 UI 像素图标**，自动使用各模组的定义图标；长名称截断，悬停可查看全名。
+- 自动暂停时，无须选中，种植区和水培箱上直接显示 **28 UI 像素**状态图标。使用原版种植区／收获图标叠加原版红叉；播种和收获同时暂停时并排显示，中间留 4 UI 像素间隙。不需要手工合成图片或额外 Textures 文件。
+- 地图图标替代原来的选中信息栏附加文字；悬停图标可看到原因。种植区按设定作物显示；HDH 收获标记按内部当前批次植物显示。
+- 右键正常可派工的目标，保留原版优先工作选项，但暂停期间不可点击。中文分别附加 `（因库存限额暂停播种）` 和 `（因库存限额暂停收获）` 对应提示（游戏实际括号使用半角）；英文含义一致。
+- 仅在同步生成菜单时预览工作资格，返回菜单前清空执行回调；异常路径也恢复上下文。技能、可达性、手动 Off、Smart Farming 模式等原有规则继续有效，因此本来就不能生成工作的目标不会凭空新增选项。
+- 图标只查询已缓存的暂停状态，不增加库存检查次数。设施引用每 600 ticks 或列表／区域形状变化时更新；区域质心只在首次显示或编辑形状后计算，屏外和迷雾中的图标不绘制。
+
 ## 安装与使用
 
 1. 将整个模组目录放在 RimWorld/Mods 中；本机已处于该位置，已提供编译好的 `1.6/Assemblies/StopFarmingWhenReachLimit.dll`。
@@ -87,13 +96,17 @@ dotnet build '.\Source\StopFarmingWhenReachLimit.sln' -c Release '-p:RimWorldDir
 3. `Hysteresis.cs`：严格上下限滞回纯逻辑。
 4. `FarmingSettings.cs`、`CropCatalog.cs`：逐植物配置、一次性自动发现、设置持久化。
 5. `MapComponent_FarmingLimits.cs`：每地图状态与存档、按产物去重、600-tick 原版缓存读取。
-6. `FarmingGate.cs`、`WorkPatches.cs`：工作资格过滤、实际植物判定、任务执行阶段严格暂停、选中说明。
+6. `FarmingGate.cs`、`WorkPatches.cs`：工作资格过滤、实际植物判定、任务执行阶段严格暂停。
 7. `OptionalCompatibility.cs`：保留 Smart Farming 原模式，动态安装 HDH 可选补丁。
 8. `FarmingMod.cs`：原版设置窗口，搜索结果缓存，只绘制可见列表行，全部界面文本提供英／简中同义版本。
+9. `FarmingOverlay.cs`、`PauseIcons.cs`：缓存设施引用和区域锚点，叠绘原版状态图标。
+10. `FarmingMenuPreview.cs`：右键工作菜单预览作用域、禁用选项和本地化原因提示。
 
 每个命名函数均有用途注释；关键设计边界有额外中文注释。各功能只使用主线程，不创建后台库存扫描线程，不添加额外建筑。
 
 ## English usage
+
+Version 1.1 adds separate 32 UI-pixel crop/product icons in settings and 28 UI-pixel map markers using vanilla growing/harvest icons plus the vanilla cancel cross. Two pause markers sit side by side with a 4 UI-pixel gap. Map markers replace the extra inspect-pane text. Normal right-click work options remain visible but disabled during an inventory pause, with a parenthesized reason. Existing manual Off, Smart Farming, skill and reachability rules still apply. No custom texture files are needed.
 
 Enable Harmony and this mod. Load this mod **after** Smart Farming and High Density Hydroponics if either is enabled; neither is required. Restart RimWorld, then open Options → Mod settings → Stop farming when reach limit.
 

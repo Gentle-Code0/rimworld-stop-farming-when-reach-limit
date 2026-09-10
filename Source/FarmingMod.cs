@@ -16,7 +16,7 @@ namespace StopFarmingWhenReachLimit
         private Vector2 scroll;
         private string search = "";
         private string previousSearch;
-        private const float RowHeight = 64f;
+        private const float RowHeight = 80f;
 
         /// <summary>读取设置；待所有模组加载完成后安装补丁并发现植物，确保可选模组类型可用。</summary>
         public FarmingMod(ModContentPack content) : base(content)
@@ -124,10 +124,10 @@ namespace StopFarmingWhenReachLimit
         {
             if (index % 2 == 0) Widgets.DrawLightHighlight(rect);
             CropRule rule = entry.Rule;
-            string productLabel = entry.Product == null ? "SFRL_NoProduct".Translate().ToString() : entry.Product.LabelCap.ToString();
-            Rect nameRect = new Rect(rect.x + 3f, rect.y + 2f, rect.width * .39f - 5f, 58f);
-            Widgets.Label(nameRect, entry.Plant.LabelCap + "\n→ " + productLabel);
-            TooltipHandler.TipRegion(nameRect, entry.Plant.defName + "\n" + "SFRL_IndependentRule".Translate());
+            // 两行各有 32 UI 像素图标；使用 DefIcon 自动适配原版和其他模组的 uiIcon、颜色与比例。
+            DrawDefRow(new Rect(rect.x + 4f, rect.y + 3f, rect.width * .39f - 8f, 36f), entry.Plant);
+            if (entry.Product != null)
+                DrawDefRow(new Rect(rect.x + 4f, rect.y + 41f, rect.width * .39f - 8f, 36f), entry.Product);
             if (!entry.Supported)
             {
                 Widgets.Label(new Rect(rect.width * .40f, rect.y + 8f, rect.width * .59f, 50f),
@@ -146,6 +146,15 @@ namespace StopFarmingWhenReachLimit
             if (!Hysteresis.Valid(rule.Lower, rule.Upper) || rule.Lower == 0)
                 Widgets.Label(new Rect(rect.width * .40f, rect.y + 32f, rect.width * .60f, 30f),
                     (Hysteresis.Valid(rule.Lower, rule.Upper) ? "SFRL_ZeroLower" : "SFRL_InvalidThreshold").Translate());
+        }
+
+        /// <summary>绘制一行定义图标及名称；名称过长时截断，并用悬停提示保留全名与 defName。</summary>
+        private static void DrawDefRow(Rect rect, ThingDef def)
+        {
+            Widgets.DefIcon(new Rect(rect.x, rect.y + 2f, 32f, 32f), def, drawPlaceholder: true);
+            string label = def.LabelCap.ToString();
+            Widgets.Label(new Rect(rect.x + 40f, rect.y + 6f, rect.width - 40f, 26f), label.Truncate(rect.width - 40f));
+            TooltipHandler.TipRegion(rect, label + "\n" + def.defName + "\n" + "SFRL_IndependentRule".Translate());
         }
     }
 }

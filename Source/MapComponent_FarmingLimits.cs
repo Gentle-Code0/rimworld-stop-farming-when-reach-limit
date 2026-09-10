@@ -5,7 +5,7 @@ using Verse;
 namespace StopFarmingWhenReachLimit
 {
     /// <summary>逐地图保存滞回状态；热路径只查字典，库存检查绝不遍历地格、田地或物品堆。</summary>
-    public sealed class MapComponent_FarmingLimits : MapComponent
+    public sealed partial class MapComponent_FarmingLimits : MapComponent
     {
         public const int CheckInterval = 600;
         private static readonly ConditionalWeakTable<Map, MapComponent_FarmingLimits> cache =

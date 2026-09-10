@@ -68,6 +68,7 @@ namespace StopFarmingWhenReachLimit
         [HarmonyPriority(Priority.Last)]
         private static void Postfix(Thing t, ref Job __result)
         {
+            FarmingMenuPreview.ObserveDesignatedJob(__result);
             if (FarmingGate.IsHarvestJob(__result) && FarmingGate.BlockHarvest(t as Plant)) __result = null;
         }
     }
@@ -95,28 +96,4 @@ namespace StopFarmingWhenReachLimit
         }
     }
 
-    /// <summary>选中种植区时显示库存自动暂停状态，不占用 Smart Farming 的播种按钮。</summary>
-    [HarmonyPatch(typeof(Zone_Growing), "GetInspectString")]
-    internal static class ZoneInspectPatch
-    {
-        /// <summary>把库存锁状态追加到原版和其他模组已经生成的说明后。</summary>
-        private static void Postfix(Zone_Growing __instance, ref string __result)
-        {
-            string status = FarmingGate.InspectStatus(__instance.Map, __instance.GetPlantDefToGrow());
-            if (status != null) __result += "\n" + status;
-        }
-    }
-
-    /// <summary>原版水培箱及调用基类说明的 HDH 显示库存状态。</summary>
-    [HarmonyPatch(typeof(Building_PlantGrower), "GetInspectString")]
-    internal static class GrowerInspectPatch
-    {
-        /// <summary>仅向玩家设施添加状态，非玩家设施保持原说明。</summary>
-        private static void Postfix(Building_PlantGrower __instance, ref string __result)
-        {
-            if (!FarmingGate.Managed(__instance)) return;
-            string status = FarmingGate.InspectStatus(__instance.Map, __instance.GetPlantDefToGrow());
-            if (status != null) __result += "\n" + status;
-        }
-    }
 }

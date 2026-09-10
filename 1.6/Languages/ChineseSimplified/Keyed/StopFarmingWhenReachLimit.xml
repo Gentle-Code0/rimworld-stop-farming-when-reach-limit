@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <SFRL_MenuPausedSowing>因库存限额暂停播种</SFRL_MenuPausedSowing>
+  <SFRL_MenuPausedHarvest>因库存限额暂停收获</SFRL_MenuPausedHarvest>
   <SFRL_Enabled>启用库存农业限额</SFRL_Enabled>
   <SFRL_EnabledTip>关闭后立即解除全部库存限制。保留手动设置和已经记住的滞回状态。</SFRL_EnabledTip>
   <SFRL_ControlSowing>自动暂停和恢复播种</SFRL_ControlSowing>

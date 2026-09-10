@@ -25,7 +25,9 @@ namespace StopFarmingWhenReachLimit
         /// <summary>查询地图＋实际植物类型的库存锁；调用者负责检查目标是否属于本模组管理范围。</summary>
         public static bool Paused(Map map, ThingDef plant, bool sowing)
         {
-            if (!Enabled(sowing)) return false;
+            // 仅在同步生成右键菜单的作用域内模拟“没有库存锁”，让原版生成完整选项；
+            // 选项在交给菜单前立即设为 Disabled，作用域在异常路径也会恢复，绝不执行工作。
+            if (!Enabled(sowing) || FarmingMenuPreview.Active) return false;
             MapComponent_FarmingLimits component = MapComponent_FarmingLimits.For(map);
             return component != null && component.IsPaused(plant);
         }

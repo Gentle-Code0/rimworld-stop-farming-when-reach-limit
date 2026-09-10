@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Linq.Expressions;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -11,6 +12,8 @@ namespace StopFarmingWhenReachLimit
     {
         public static bool SmartFarmingActive { get; private set; }
         public static bool HighDensityReady { get; private set; }
+        private static Type hydroType;
+        private static Func<Building_PlantGrower, ThingDef> currentHarvestPlant;
 
         /// <summary>检测已加载程序集并安装 HDH 独立入口；Smart Farming 沿用它自己的模式和补丁。</summary>
         public static void Install(Harmony harmony)
@@ -30,7 +33,20 @@ namespace StopFarmingWhenReachLimit
             }
             harmony.Patch(sow, postfix: new HarmonyMethod(typeof(OptionalCompatibility), nameof(HydroSowPostfix)) { priority = Priority.Last });
             harmony.Patch(harvest, prefix: new HarmonyMethod(typeof(OptionalCompatibility), nameof(HydroHarvestPrefix)));
+            // 启动时编译一次字段访问器，地图图标每帧只调用委托，不反射查找字段。
+            var parameter = Expression.Parameter(typeof(Building_PlantGrower), "grower");
+            currentHarvestPlant = Expression.Lambda<Func<Building_PlantGrower, ThingDef>>(
+                Expression.Field(Expression.Convert(parameter, hydro), currentPlant), parameter).Compile();
+            hydroType = hydro;
             HighDensityReady = true;
+        }
+
+        /// <summary>返回设施当前批次的收获植物；HDH 改种时不能误用下一批设定绘制收获标记。</summary>
+        public static ThingDef HarvestPlantFor(Building_PlantGrower grower)
+        {
+            if (hydroType != null && hydroType.IsInstanceOfType(grower))
+                return currentHarvestPlant(grower) ?? grower.GetPlantDefToGrow();
+            return grower.GetPlantDefToGrow();
         }
 
         /// <summary>严格拒绝新播种，半满箱也不放行；不跳过 HandleSowing，以便吸收已完成的幼苗并自然转换阶段。</summary>
