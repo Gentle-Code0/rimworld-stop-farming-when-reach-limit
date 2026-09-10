@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <AssemblyName>StopFarmingWhenReachLimit</AssemblyName>
+    <RootNamespace>StopFarmingWhenReachLimit</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\1.6\Assemblies\</OutputPath>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <Deterministic>true</Deterministic>
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">$(MSBuildThisFileDirectory)..\..\..</RimWorldDir>
+    <GameManaged>$(RimWorldDir)\RimWorldWin64_Data\Managed</GameManaged>
+    <HarmonyPath Condition="'$(HarmonyPath)' == ''">$(RimWorldDir)\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HarmonyPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp"><HintPath>$(GameManaged)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameManaged)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(GameManaged)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(GameManaged)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(HarmonyPath)</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <Target Name="CheckLocalReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(GameManaged)\Assembly-CSharp.dll')" Text="Set RimWorldDir to your RimWorld installation directory (see README)." />
+    <Error Condition="!Exists('$(HarmonyPath)')" Text="Set HarmonyPath to the installed Harmony mod's 0Harmony.dll (see README)." />
+  </Target>
+</Project>
