@@ -60,9 +60,9 @@ namespace StopFarmingWhenReachLimit
             float explanationHeight = Mathf.Max(54f, Text.CalcHeight(explanation, inRect.width));
             Widgets.Label(new Rect(inRect.x, y, inRect.width, explanationHeight), explanation);
             y += explanationHeight + 4f;
-            Widgets.Label(new Rect(inRect.x, y, inRect.width, 30f), "SFRL_Compatibility".Translate(
-                OptionalCompatibility.SmartFarmingActive ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate(),
-                OptionalCompatibility.HighDensityReady ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate()));
+            // Widgets.Label(new Rect(inRect.x, y, inRect.width, 30f), "SFRL_Compatibility".Translate(
+            //     OptionalCompatibility.SmartFarmingActive ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate(),
+            //     OptionalCompatibility.HighDensityReady ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate()));
             y += 32f;
             Widgets.Label(new Rect(inRect.x, y, 85f, 28f), "SFRL_Search".Translate());
             search = Widgets.TextField(new Rect(inRect.x + 85f, y, inRect.width - 85f, 28f), search);

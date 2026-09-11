@@ -44,7 +44,7 @@ namespace StopFarmingWhenReachLimit
     [HarmonyPatch(typeof(WorkGiver_GrowerHarvest), "HasJobOnCell")]
     internal static class HarvestCellPatch
     {
-        /// <summary>按实际植物阻止收获；不按整片种植区过滤，以免误伤混种／改种后的其他作物。</summary>
+        /// <summary>逐株兜底：设施预过滤放行的混种、重叠及直接派工仍按实际植物判断。</summary>
         private static bool Prefix(Pawn pawn, IntVec3 c, ref bool __result)
         {
             if (!FarmingGate.Enabled(false) || !c.InBounds(pawn.Map) || !FarmingGate.BlockHarvest(c.GetPlant(pawn.Map))) return true;
@@ -97,3 +97,4 @@ namespace StopFarmingWhenReachLimit
     }
 
 }
+

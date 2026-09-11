@@ -2,6 +2,22 @@
 
 作者沿用 visitor-spot：`"GentleCode"`。适用于 RimWorld **1.6**，开发时对照本机 **1.6.4871 rev590**。
 
+## 1.3 收获派工搜索优化
+
+无需额外设置；启用“自动暂停和恢复收获”后自动使用，独立于 Smart Farming 的停止收获功能。
+
+- 在原版收获派工的设施资格入口提前排除：**设施内实际植物非空、种类单一、没有其他种植建筑造成归属不明，且该实际作物已被库存规则暂停**。它的格子不会进入正常收获派工候选列表。
+- 混种（即使几种作物都暂停）、空设施、重叠种植建筑或无法确认的范围保守回退到现有逐株检查。按实际地上作物判断，不按改种后选择的下一轮作物判断。
+- 每个设施首次被搜索时读取一次设施范围的植物组成，并缓存种类计数。后续小人搜索只查设施缓存和已有库存暂停状态，不重新遍历整片田。
+- 原版 ThingGrid 的逐格登记/注销回调维护植物快照。播种、实际收获移除、死亡销毁、移植移动及 HDH 输出植物，只重读受影响的已缓存格子；支持多格植物和共享格子的多个缓存。其他物品经过类型快速判断后返回。
+- 区域增减格子、注销、种植建筑移除或搬移会注销对应缓存，下一次需要时再建立；不在每个拖拽事件中重扫田地。缓存只存在内存，随地图对象释放，不写入存档。
+- 库存变化直接查询原有暂停状态；忽略、删除手工关联和关闭控制继续立即放行，不等待植物缓存更新。库存仍固定每 600 ticks 读取原版缓存。
+- 右键菜单预览绕过设施预过滤，继续使用原有“可见但不可选”的原因提示流程。正在执行的收获任务和手动指定收获仍由原有逐株/任务检查兜底；本次优化不替换指定收获的全局物品搜索。
+- 代价：首次搜索及编辑后的首次搜索需要读取设施格子，缓存内存随实际参与搜索的设施格子数增长；不是零开销。无场景的验证证明减少了搜索次数，不代表已测得真实游戏 TPS 提升。
+- 第三方若完全替换候选枚举或重写设施资格方法且不调用原版入口，可能只能获得逐株拦截；本实现不调用或修改 Smart Farming 的停止收获设置。
+
+实现文件为 Source/HarvestAreaCache.cs，详细验证见 VALIDATION.md。
+
 ## 1.2.1 删除手动关联
 
 - 新版手动关联的收获产物右侧显示 **−** 按钮。点击即可删除关联及其阈值；该关联造成的暂停立即解除，其他产物的有效限制继续生效。
@@ -145,5 +161,6 @@ Smart Farming modes and manual Off are preserved. Inventory limits also apply in
 The mod reads the existing vanilla resource-count dictionary; it never rescans stored items. Standard mod crops are discovered automatically. Unsupported or non-counted products are skipped. Stock-count refresh and check delays mean this is not a hard cap. Paused crops may still age and die.
 
 Open `Source/StopFarmingWhenReachLimit.sln` in Visual Studio 2022 with the .NET Framework 4.8 targeting pack and .NET SDK installed. Build Release / Any CPU. Set `RimWorldDir` and `HarmonyPath` MSBuild properties if your installation differs. Output goes to `1.6/Assemblies`.
+
 
 
