@@ -2,7 +2,21 @@
 
 作者沿用 visitor-spot：`"GentleCode"`。适用于 RimWorld **1.6**，开发时对照本机 **1.6.4871 rev590**。
 
-## 1.3 收获派工搜索优化
+## 1.3.1 按定义过滤不会自动收获的植物
+
+原版提供 PlantProperties.Harvestable（当前版本由 harvestYield > 0.001 派生）和 autoHarvestable。Plant.HarvestableNow 则是随生长改变的当前状态，本优化不调用它，也不轮询 Growth、LifeStage 或 CanYieldNow。
+
+- 每种植物定义首次进入设施快照时分类一次并缓存；同一定义的后续植物复用结果。已有植物随设施首次建立快照时分类，新植物通过原版格子登记事件纳入。无需额外的生长状态检查间隔。
+- 对使用普通 Plant 类、没有组件和未知收获补丁的定义，只有 Harvestable 与 autoHarvestable 同时为真才参与普通收获候选组成。原版及采用相同定义逻辑的其他模组使用同一判定，不按模组名称、植物名字或是否野生区分。
+- 能自动收获的植物从幼苗阶段就纳入；成熟时无需重新分类。不能自动收获的草不会使暂停作物区域变成混种；未来能自动收获的野生浆果等仍会导致保守的逐株回退。
+- 自定义植物类、任何植物组件、缺失定义信息均保守纳入。若首次分类时发现其他程序集修改 HasJobOnCell、HarvestableNow 或 Harvestable，则本轮会话保守保留所有植物，不尝试猜测补丁语义。这也包括其他模组仅追加限制的补丁。
+- 自定义派生收获器不使用设施预过滤，保留现有逐株拦截。手动指定/右键强制收获仍走原有流程；分类只服务于普通自动收获搜索，不代表植物不能被玩家砍除或手动收获。
+- 定义分类假设模组加载后定义和收获补丁保持稳定；运行中动态改写这些定义或安装新收获补丁需要专门适配，不通过周期扫描检测。
+- 植物出现、移除、移动以及区域调整继续使用 1.3 的事件驱动快照维护。没有新增逐 tick 或定期的植物生长扫描。库存阈值检查仍固定为每 600 ticks，两者互相独立。
+
+实现增加 Source/HarvestEligibility.cs，设置中的中英文说明已同步更新。
+
+## 1.3 收获派工搜索优化（1.3.1 对候选植物进一步筛选）
 
 无需额外设置；启用“自动暂停和恢复收获”后自动使用，独立于 Smart Farming 的停止收获功能。
 
@@ -161,6 +175,7 @@ Smart Farming modes and manual Off are preserved. Inventory limits also apply in
 The mod reads the existing vanilla resource-count dictionary; it never rescans stored items. Standard mod crops are discovered automatically. Unsupported or non-counted products are skipped. Stock-count refresh and check delays mean this is not a hard cap. Paused crops may still age and die.
 
 Open `Source/StopFarmingWhenReachLimit.sln` in Visual Studio 2022 with the .NET Framework 4.8 targeting pack and .NET SDK installed. Build Release / Any CPU. Set `RimWorldDir` and `HarmonyPath` MSBuild properties if your installation differs. Output goes to `1.6/Assemblies`.
+
 
 
 

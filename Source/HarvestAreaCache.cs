@@ -79,7 +79,7 @@ namespace StopFarmingWhenReachLimit
             ApplyHarvestCell(area, cell, 1);
         }
 
-        /// <summary>仅枚举一个已订阅格子的物体，记录所有实际植物及可能导致归属不明的种植建筑。</summary>
+        /// <summary>仅枚举一个已订阅格子的物体，记录可能自动收获的植物及可能导致归属不明的种植建筑。</summary>
         private void ReadHarvestCell(HarvestCell cell)
         {
             cell.Plants.Clear();
@@ -87,7 +87,10 @@ namespace StopFarmingWhenReachLimit
             List<Thing> things = map.thingGrid.ThingsListAtFast(cell.Position);
             for (int i = 0; i < things.Count; i++)
             {
-                if (things[i] is Plant plant) cell.Plants.Add(plant.def);
+                if (things[i] is Plant plant)
+                {
+                    if (HarvestEligibility.MayAutoHarvest(plant.def)) cell.Plants.Add(plant.def);
+                }
                 else if (things[i] is Building_PlantGrower grower) cell.Growers.Add(grower);
             }
         }
@@ -143,11 +146,11 @@ namespace StopFarmingWhenReachLimit
     [HarmonyPatch(typeof(WorkGiver_Grower), "ExtraRequirements")]
     internal static class HarvestAreaRequirementsPatch
     {
-        /// <summary>仅收紧普通收获器的结果，不干预播种器、其他工作类别或其他模组已有的拒绝。</summary>
+        /// <summary>仅收紧原版收获器；自定义派生收获器可能绕过定义资格，保留原有逐株检查。</summary>
         [HarmonyPriority(Priority.Last)]
         private static void Postfix(WorkGiver_Grower __instance, IPlantToGrowSettable settable, Pawn pawn, ref bool __result)
         {
-            if (!__result || !(__instance is WorkGiver_GrowerHarvest) || !FarmingGate.Enabled(false)
+            if (!__result || __instance.GetType() != typeof(WorkGiver_GrowerHarvest) || !FarmingGate.Enabled(false)
                 || FarmingMenuPreview.Active) return;
             MapComponent_FarmingLimits component = MapComponent_FarmingLimits.For(pawn.Map);
             if (component != null && component.SkipHarvestArea(settable)) __result = false;
@@ -195,3 +198,4 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+

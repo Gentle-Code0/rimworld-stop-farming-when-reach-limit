@@ -3,11 +3,11 @@
   <SFRL_MenuPausedSowing>Sowing paused by inventory limit</SFRL_MenuPausedSowing>
   <SFRL_MenuPausedHarvest>Harvesting paused by inventory limit</SFRL_MenuPausedHarvest>
   <SFRL_Enabled>Enable inventory farming limits</SFRL_Enabled>
-  <SFRL_EnabledTip>Disabling this releases all inventory restrictions immediately. Manual settings and remembered hysteresis states are preserved.</SFRL_EnabledTip>
+  <SFRL_EnabledTip>Disabling this releases all inventory restrictions immediately.</SFRL_EnabledTip>
   <SFRL_ControlSowing>Automatically pause and resume sowing</SFRL_ControlSowing>
-  <SFRL_ControlSowingTip>Pause above the upper limit; resume below the lower limit. Manual Off and Smart Farming modes are preserved. High Density Hydroponics pauses strictly, even with a partially sown batch. Already growing crops continue growing.</SFRL_ControlSowingTip>
+  <SFRL_ControlSowingTip>Pause above the upper limit; resume below the lower limit. Already growing crops continue growing.</SFRL_ControlSowingTip>
   <SFRL_ControlHarvest>Automatically pause and resume harvesting</SFRL_ControlHarvest>
-  <SFRL_ControlHarvestTip>Uses the same per-crop/product thresholds and hysteresis state as sowing. Also blocks designated and already assigned harvest jobs inside growing zones and player growing facilities. Cutting commands and wild plants outside these areas are unaffected. Unharvested crops still age and can die. Disabled by default.</SFRL_ControlHarvestTip>
+  <SFRL_ControlHarvestTip>Uses the same per-crop/product thresholds and hysteresis state as sowing. Also blocks designated and already assigned harvest jobs inside growing zones and player growing facilities. Cutting commands and wild plants outside these areas are unaffected. Unharvested crops still age and can die. Disabled by default. </SFRL_ControlHarvestTip>
   <SFRL_Explanation>Read vanilla stock counts every 600 ticks. Each product pauses above its upper limit and clears below its lower limit. Any non-ignored product still paused keeps the crop paused. New products are ignored.</SFRL_Explanation>
   <SFRL_Compatibility>Smart Farming: {0} | High Density Hydroponics adapter: {1}</SFRL_Compatibility>
   <SFRL_Detected>active</SFRL_Detected>
@@ -28,9 +28,9 @@
   <SFRL_PausedHarvest>{0}: harvesting paused by inventory limit.</SFRL_PausedHarvest>
   <SFRL_HideHarvestIcon>Hide paused harvesting icon</SFRL_HideHarvestIcon>
   <SFRL_Products>Harvested product</SFRL_Products>
-  <SFRL_HideHarvestIconTip>Only hides the paused harvesting icon on the map. Inventory control and right-click explanations are unchanged.</SFRL_HideHarvestIconTip>
+  <SFRL_HideHarvestIconTip>Only hides the paused harvesting icon on the map.</SFRL_HideHarvestIconTip>
   <SFRL_Crop>Crop</SFRL_Crop>
-  <SFRL_HideSowingIconTip>Only hides the paused sowing icon on the map. Inventory control and right-click explanations are unchanged.</SFRL_HideSowingIconTip>
+  <SFRL_HideSowingIconTip>Only hides the paused sowing icon on the map.</SFRL_HideSowingIconTip>
   <SFRL_AddProductTitle>Link a harvested product to {0}</SFRL_AddProductTitle>
   <SFRL_HideSowingIcon>Hide paused sowing icon</SFRL_HideSowingIcon>
   <SFRL_AddProduct>Manually link an additional harvested product. New links are ignored by default. Standard products are detected automatically; products using the standard additional-yield interface are detected on their first actual harvest.</SFRL_AddProduct>
