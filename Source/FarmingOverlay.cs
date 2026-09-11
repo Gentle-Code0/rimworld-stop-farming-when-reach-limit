@@ -55,8 +55,8 @@ namespace StopFarmingWhenReachLimit
                 if (!anchor.InBounds(map) || !view.Contains(anchor) || anchor.Fogged(map)) continue;
                 ThingDef sowPlant = building != null ? building.GetPlantDefToGrow() : marker.Zone.GetPlantDefToGrow();
                 ThingDef harvestPlant = building != null ? OptionalCompatibility.HarvestPlantFor(building) : sowPlant;
-                bool pausedSow = FarmingGate.Enabled(true) && IsPaused(sowPlant);
-                bool pausedHarvest = FarmingGate.Enabled(false) && IsPaused(harvestPlant);
+                bool pausedSow = !FarmingMod.Settings.HideSowingIcon && FarmingGate.Enabled(true) && IsPaused(sowPlant);
+                bool pausedHarvest = !FarmingMod.Settings.HideHarvestIcon && FarmingGate.Enabled(false) && IsPaused(harvestPlant);
                 if (!pausedSow && !pausedHarvest) continue;
                 Vector2 position = building != null ? GenMapUI.LabelDrawPosFor(building, 0f) : GenMapUI.LabelDrawPosFor(anchor);
                 int count = pausedSow && pausedHarvest ? 2 : 1;
@@ -130,3 +130,4 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+

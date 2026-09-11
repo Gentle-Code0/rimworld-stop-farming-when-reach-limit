@@ -13,7 +13,7 @@ namespace StopFarmingWhenReachLimit
         private Dictionary<string, bool> savedPaused = new Dictionary<string, bool>();
         private List<string> saveKeys;
         private List<bool> saveValues;
-        private readonly Dictionary<ThingDef, RuntimeRule> byPlant = new Dictionary<ThingDef, RuntimeRule>();
+        private readonly Dictionary<ThingDef, List<RuntimeRule>> byPlant = new Dictionary<ThingDef, List<RuntimeRule>>();
         private readonly List<RuntimeRule> active = new List<RuntimeRule>();
         private readonly List<ThingDef> products = new List<ThingDef>();
         private int[] stock = new int[0];
@@ -25,6 +25,7 @@ namespace StopFarmingWhenReachLimit
         private sealed class RuntimeRule
         {
             public CropEntry Entry;
+            public string Key;
             public int ProductIndex;
             public bool Paused;
             public bool CountAvailable = true;
@@ -93,10 +94,20 @@ namespace StopFarmingWhenReachLimit
                     products.Add(entry.Product);
                 }
                 bool paused;
-                savedPaused.TryGetValue(entry.Plant.defName, out paused);
-                var runtime = new RuntimeRule { Entry = entry, ProductIndex = index, Paused = paused };
+                string key = rule.StateKey;
+                if (!savedPaused.TryGetValue(key, out paused) &&
+                    entry.Product == entry.Plant.plant.harvestedThingDef &&
+                    savedPaused.TryGetValue(entry.Plant.defName, out paused))
+                {
+                    savedPaused[key] = paused;
+                    savedPaused.Remove(entry.Plant.defName);
+                }
+                var runtime = new RuntimeRule { Entry = entry, Key = key, ProductIndex = index, Paused = paused };
                 active.Add(runtime);
-                byPlant.Add(entry.Plant, runtime);
+                List<RuntimeRule> plantRules;
+                if (!byPlant.TryGetValue(entry.Plant, out plantRules))
+                    byPlant.Add(entry.Plant, plantRules = new List<RuntimeRule>());
+                plantRules.Add(runtime);
             }
             stock = new int[products.Count];
             available = new bool[products.Count];
@@ -118,17 +129,22 @@ namespace StopFarmingWhenReachLimit
                 if (!runtime.CountAvailable) continue; // 未统计：暂不控制，保留原有滞回记忆。
                 CropRule rule = runtime.Entry.Rule;
                 runtime.Paused = Hysteresis.Next(runtime.Paused, stock[runtime.ProductIndex], rule.Lower, rule.Upper);
-                savedPaused[runtime.Entry.Plant.defName] = runtime.Paused;
+                savedPaused[runtime.Key] = runtime.Paused;
             }
         }
 
         /// <summary>查询植物的库存暂停状态；忽略、无效阈值和关闭总开关均立即解除限制。</summary>
         public bool IsPaused(ThingDef plant)
         {
-            RuntimeRule rule;
-            return FarmingMod.Settings.Enabled && plant != null && byPlant.TryGetValue(plant, out rule)
-                && !rule.Entry.Rule.Ignore && Hysteresis.Valid(rule.Entry.Rule.Lower, rule.Entry.Rule.Upper)
-                && rule.CountAvailable && rule.Paused;
+            List<RuntimeRule> rules;
+            if (!FarmingMod.Settings.Enabled || plant == null || !byPlant.TryGetValue(plant, out rules)) return false;
+            // 任一未忽略产物仍处于滞回暂停状态，则整种作物保持暂停。
+            // 查询只遍历当前作物的小型产物列表，不遍历所有规则或库存。
+            foreach (RuntimeRule rule in rules)
+                if (!rule.Entry.Rule.Ignore && Hysteresis.Valid(rule.Entry.Rule.Lower, rule.Entry.Rule.Upper)
+                    && rule.CountAvailable && rule.Paused) return true;
+            return false;
         }
     }
 }
+

@@ -2,7 +2,33 @@
 
 作者沿用 visitor-spot：`"GentleCode"`。适用于 RimWorld **1.6**，开发时对照本机 **1.6.4871 rev590**。
 
-## 1.1 界面改进
+## 1.2.1 删除手动关联
+
+- 新版手动关联的收获产物右侧显示 **−** 按钮。点击即可删除关联及其阈值；该关联造成的暂停立即解除，其他产物的有效限制继续生效。
+- 删除后可通过作物旁的 **＋** 重新关联；重新添加默认忽略，使用默认阈值和全新的暂停记忆。删除最后一个产物后，作物仍显示在列表中。
+- 标准主产物、XML 声明产物、实际收获接口自动发现的产物不可删除。手动关联后来被实际收获确认为真实产物时，会自动转为受保护的自动关联。
+- **1.2 及更早版本未记录来源，无法可靠识别旧的手动关联。** 旧版来源不明的关联不可删除，仍可勾选“忽略”停用。重复点击“＋”不会将自动或来源不明的关联改成可删除项。
+- 关联来源和新建手工关联的状态标识随模组设置保存。固定 600-tick 库存检查和原版统计口径不变。
+
+## 1.2 多产物与显示设置
+
+- 设置表格分成“作物 / 收获产物 / 忽略 / 下限 / 上限”五列，作物和产物均保留 32 UI 像素图标。一种作物的各产物分别成行，分别保存忽略与阈值；“忽略”勾选框紧跟文字。
+- 每个作物＋产物使用独立滞回状态。**任意未忽略且受支持的产物处于暂停状态，整种作物就暂停；所有有效产物的暂停状态都解除后才恢复。** 同产物由不同作物产出时，各作物仍独立配置。
+- 设置新增“隐藏暂停播种图标”和“隐藏暂停收获图标”。只改变显示，不改变暂停及右键原因提示；隐藏其中一个后，另一个自动居中。图标不绘制黑底，操作图案与红叉均为 **70% 不透明度（alpha = 0.7）**。
+- 旧版本配置及地图暂停记忆自动迁移到主产物；新增副产物默认忽略，避免意外阻止工作。
+- 标准主产物在加载时发现；使用游戏 ThingComp.GetAdditionalHarvestYield() 接口提供的额外／随机产物，在首次实际收获且产出数量大于零时识别。观察器不会提前运行收获代码，也不会修改产物与数量。发现后进入设置页配置，随模组设置保存。
+- 完全自定义产出代码不保证能自动识别。点击作物旁 **＋**，搜索并关联产物，再配置其阈值、取消忽略；错误的新版手动关联可点击产物旁的 − 删除，也可勾选忽略。同一关联不会重复添加。手工关联不改变作物实际产出。
+- 模组作者也可以在植物 ThingDef 的 modExtensions 中声明下列扩展，让副产物在启动时直接出现：
+
+    <li Class="StopFarmingWhenReachLimit.HarvestProductsExtension">
+      <products>
+        <li>实际副产物DefName</li>
+      </products>
+    </li>
+
+库存仍严格每 600 ticks 读取原版缓存，同一种产物每轮只读取一次。目录发现与手动关联不扫描任何库存。任意第三方自动农业的工作入口是否受控，仍取决于它是否使用本模组已覆盖的工作入口。
+
+## 1.1 界面改进（保留功能）
 
 - 设置表格分别显示植物和产物的 **32 UI 像素图标**，自动使用各模组的定义图标；长名称截断，悬停可查看全名。
 - 自动暂停时，无须选中，种植区和水培箱上直接显示 **28 UI 像素**状态图标。使用原版种植区／收获图标叠加原版红叉；播种和收获同时暂停时并排显示，中间留 4 UI 像素间隙。不需要手工合成图片或额外 Textures 文件。
@@ -17,8 +43,8 @@
 2. 在游戏模组列表启用 **Harmony** 和 **Stop farming when reach limit**。
 3. 如果启用了 **Smart Farming** 或 **High Density Hydroponics**，把本模组放在它们下方。两者均为可选项，About.xml 只将 Harmony 列为强依赖。
 4. 重启游戏，在“选项 → 模组设置 → Stop farming when reach limit”中配置。
-5. 总开关和自动播种控制默认开启；自动收获控制默认关闭；每种新发现的植物默认勾选“忽略”。搜索目标植物，设置上下限后取消“忽略”。
-6. 播种和收获控制可以分别启用；启用的功能共用该植物的上下限和滞回状态。设置示例：水稻下限 500、上限 1500；大米库存严格大于 1500 时暂停，严格小于 500 时恢复。
+5. 总开关和自动播种控制默认开启；自动收获控制默认关闭；每种新发现的作物＋产物默认勾选“忽略”。搜索目标植物，设置上下限后取消“忽略”。
+6. 播种和收获控制可以分别启用；启用的功能共用该作物各产物的上下限和滞回状态。设置示例：水稻下限 500、上限 1500；大米库存严格大于 1500 时暂停，严格小于 500 时恢复。
 7. 库存等于上下限或位于两者之间时，保持上次状态。首次启用没有历史状态的规则，在区间内默认不暂停。
 8. 每张地图独立统计、独立记忆暂停状态；阈值配置是全局 Mod 设置，适用于各地图和存档。
 
@@ -31,11 +57,11 @@
 ## 植物发现与统计口径
 
 - 所有模组定义加载后，只遍历一次 ThingDef，自动发现有 sowTags 的植物，以 `plant.harvestedThingDef` 找到标准收获产物。
-- 规则键为植物 **defName**。两种植物即使产出同一种物品，也能各自设置不同阈值、各自忽略、各自保持状态。
+- 规则键为植物与产物的 **defName 组合**。两种植物即使产出同一种物品，也能各自设置不同阈值、各自忽略、各自保持状态。
 - 每轮对相同产物只读取一次 `map.resourceCounter.AllCountedAmounts`。这是原版 `GetCount` 使用的同一个字典；不调用 `UpdateResourceCounts`、`CheckUpdateResource`，不遍历储存区或地面库存。
 - 原版统计不包含的产物显示为不受支持；缓存缺失键时不把它当成 0，不执行这条规则，保留历史状态。
 - 数量是原版认可的库存物品件数。未入库收获物、背包、商队及特殊容器是否计入，完全遵循原版或修改了原版资源计数器的其他模组。
-- 普通新增作物自动兼容。多产物、随机产物只监控标准 harvestedThingDef；无标准产物或自定义自动农业流程需要专门适配，不声称支持所有任意 C# 农业实现。
+- 普通新增作物自动兼容；多产物通过标准额外收获接口观察、XML 扩展声明或手工关联登记，详见 1.2 说明。没有标准产物的作物也可关联。完全自定义自动农业流程可能需要专门适配。
 
 ## Smart Farming 兼容
 
@@ -47,7 +73,7 @@
 最终播种资格 = 原版与 Smart Farming 允许播种 AND 没有库存暂停
 ```
 
-因此库存回落只是解除本模组的锁，不会把手动 Off 改成 On，也不会把 Smart 改成普通种植。Force 仍受库存锁约束；需要手动绕过库存限制时，勾选该植物的“忽略”。Smart Farming 已有的收获限制也会保留，本模组从不强制将其他模组拒绝的收获工作重新开启。
+因此库存回落只是解除本模组的锁，不会把手动 Off 改成 On，也不会把 Smart 改成普通种植。Force 仍受库存锁约束；需要手动绕过库存限制时，勾选该植物所有相关产物的“忽略”。Smart Farming 已有的收获限制也会保留，本模组从不强制将其他模组拒绝的收获工作重新开启。
 
 ## High Density Hydroponics 兼容
 
@@ -94,7 +120,7 @@ dotnet build '.\Source\StopFarmingWhenReachLimit.sln' -c Release '-p:RimWorldDir
 1. 对照 visitor-spot 的元数据和版本化布局，建立独立 About、Source/Properties、1.6/Assemblies、1.6/Languages。
 2. 核对本地游戏及可选模组程序集，确定播种、收获、任务队列和批次处理入口。
 3. `Hysteresis.cs`：严格上下限滞回纯逻辑。
-4. `FarmingSettings.cs`、`CropCatalog.cs`：逐植物配置、一次性自动发现、设置持久化。
+4. `FarmingSettings.cs`、`CropCatalog.cs`：作物＋产物配置、主产物发现与额外产物登记、设置持久化。
 5. `MapComponent_FarmingLimits.cs`：每地图状态与存档、按产物去重、600-tick 原版缓存读取。
 6. `FarmingGate.cs`、`WorkPatches.cs`：工作资格过滤、实际植物判定、任务执行阶段严格暂停。
 7. `OptionalCompatibility.cs`：保留 Smart Farming 原模式，动态安装 HDH 可选补丁。
@@ -119,3 +145,5 @@ Smart Farming modes and manual Off are preserved. Inventory limits also apply in
 The mod reads the existing vanilla resource-count dictionary; it never rescans stored items. Standard mod crops are discovered automatically. Unsupported or non-counted products are skipped. Stock-count refresh and check delays mean this is not a hard cap. Paused crops may still age and die.
 
 Open `Source/StopFarmingWhenReachLimit.sln` in Visual Studio 2022 with the .NET Framework 4.8 targeting pack and .NET SDK installed. Build Release / Any CPU. Set `RimWorldDir` and `HarmonyPath` MSBuild properties if your installation differs. Output goes to `1.6/Assemblies`.
+
+

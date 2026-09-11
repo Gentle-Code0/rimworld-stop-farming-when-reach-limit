@@ -20,12 +20,11 @@ namespace StopFarmingWhenReachLimit
             return new Rect(center.x - total / 2f + slot * (Size + Gap), center.y - Size / 2f, Size, Size);
         }
 
-        /// <summary>绘制操作图标并在右下角叠原版红叉，保留底层图案的辨识度。</summary>
+        /// <summary>无背景绘制操作图标与原版红叉；两层均使用 70% 不透明度。</summary>
         internal static void Draw(Rect rect, bool sowing)
         {
             Color oldColor = GUI.color;
-            Widgets.DrawBoxSolid(rect, new Color(0.08f, 0.08f, 0.08f, 0.70f));
-            GUI.color = Color.white;
+            GUI.color = new Color(1f, 1f, 1f, 0.70f);
             GUI.DrawTexture(rect.ContractedBy(2f), sowing ? sow : harvest, ScaleMode.ScaleToFit);
             GUI.DrawTexture(new Rect(rect.xMax - 15f, rect.yMax - 15f, 15f, 15f), cross, ScaleMode.ScaleToFit);
             GUI.color = oldColor;
@@ -35,3 +34,5 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
+

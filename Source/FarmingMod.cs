@@ -16,7 +16,8 @@ namespace StopFarmingWhenReachLimit
         private Vector2 scroll;
         private string search = "";
         private string previousSearch;
-        private const float RowHeight = 80f;
+        private const float RowHeight = 56f;
+        private int catalogRevision = -1;
 
         /// <summary>读取设置；待所有模组加载完成后安装补丁并发现植物，确保可选模组类型可用。</summary>
         public FarmingMod(ModContentPack content) : base(content)
@@ -32,7 +33,7 @@ namespace StopFarmingWhenReachLimit
             var harmony = new Harmony(HarmonyId);
             harmony.PatchAll(typeof(FarmingMod).Assembly);
             OptionalCompatibility.Install(harmony);
-            Log.Message("[Stop farming when reach limit] Initialized; " + CropCatalog.Entries.Count + " crops discovered.");
+            Log.Message("[Stop farming when reach limit] Initialized; " + CropCatalog.Entries.Count + " crop/product rows discovered.");
         }
 
         /// <summary>返回 Mod 设置列表中显示的名称。</summary>
@@ -50,8 +51,15 @@ namespace StopFarmingWhenReachLimit
             DrawToggle(inRect, ref y, "SFRL_Enabled", ref Settings.Enabled);
             DrawToggle(inRect, ref y, "SFRL_ControlSowing", ref Settings.ControlSowing);
             DrawToggle(inRect, ref y, "SFRL_ControlHarvest", ref Settings.ControlHarvest);
-            Widgets.Label(new Rect(inRect.x, y, inRect.width, 54f), "SFRL_Explanation".Translate());
-            y += 58f;
+            float toggleY = y;
+            DrawToggle(new Rect(inRect.x, y, inRect.width * .49f, 28f), ref toggleY,
+                "SFRL_HideSowingIcon", ref Settings.HideSowingIcon);
+            DrawToggle(new Rect(inRect.x + inRect.width * .51f, y, inRect.width * .49f, 28f), ref y,
+                "SFRL_HideHarvestIcon", ref Settings.HideHarvestIcon);
+            string explanation = "SFRL_Explanation".Translate();
+            float explanationHeight = Mathf.Max(54f, Text.CalcHeight(explanation, inRect.width));
+            Widgets.Label(new Rect(inRect.x, y, inRect.width, explanationHeight), explanation);
+            y += explanationHeight + 4f;
             Widgets.Label(new Rect(inRect.x, y, inRect.width, 30f), "SFRL_Compatibility".Translate(
                 OptionalCompatibility.SmartFarmingActive ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate(),
                 OptionalCompatibility.HighDensityReady ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate()));
@@ -65,7 +73,7 @@ namespace StopFarmingWhenReachLimit
                 Text.Font = oldFont;
                 return;
             }
-            if (previousSearch != search) Refilter();
+            if (previousSearch != search || catalogRevision != CropCatalog.Revision) Refilter();
             float width = inRect.width - 20f;
             DrawHeader(new Rect(inRect.x, y, width, 28f));
             y += 30f;
@@ -90,7 +98,7 @@ namespace StopFarmingWhenReachLimit
             y += 30f;
         }
 
-        /// <summary>只在搜索字符串改变时过滤目录，支持植物名、产物名和 defName。</summary>
+        /// <summary>只在搜索字符串或产物目录改变时过滤目录，支持植物名、产物名和 defName。</summary>
         private void Refilter()
         {
             filtered.Clear();
@@ -101,6 +109,7 @@ namespace StopFarmingWhenReachLimit
                     filtered.Add(entry);
             }
             previousSearch = search;
+            catalogRevision = CropCatalog.Revision;
             scroll = Vector2.zero;
         }
 
@@ -113,41 +122,58 @@ namespace StopFarmingWhenReachLimit
         /// <summary>绘制与数据行一致的列标题；阈值为物品件数而非营养值或堆数。</summary>
         private static void DrawHeader(Rect rect)
         {
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width * .39f, rect.height), "SFRL_CropProduct".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .40f, rect.y, rect.width * .18f, rect.height), "SFRL_Ignore".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .60f, rect.y, rect.width * .18f, rect.height), "SFRL_Lower".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .80f, rect.y, rect.width * .18f, rect.height), "SFRL_Upper".Translate());
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width * .26f, rect.height), "SFRL_Crop".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .27f, rect.y, rect.width * .27f, rect.height), "SFRL_Products".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y, rect.width * .12f, rect.height), "SFRL_Ignore".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .68f, rect.y, rect.width * .15f, rect.height), "SFRL_Lower".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .84f, rect.y, rect.width * .15f, rect.height), "SFRL_Upper".Translate());
         }
 
-        /// <summary>绘制植物独立设置及错误提示；同一产物的不同植物仍是不同配置行。</summary>
+        /// <summary>绘制一对作物与产物的独立设置；忽略框贴近文字，错误信息放在输入框下方。</summary>
         private static void DrawRow(Rect rect, CropEntry entry, int index)
         {
             if (index % 2 == 0) Widgets.DrawLightHighlight(rect);
-            CropRule rule = entry.Rule;
-            // 两行各有 32 UI 像素图标；使用 DefIcon 自动适配原版和其他模组的 uiIcon、颜色与比例。
-            DrawDefRow(new Rect(rect.x + 4f, rect.y + 3f, rect.width * .39f - 8f, 36f), entry.Plant);
+            DrawDefRow(new Rect(rect.x + 4f, rect.y + 3f, rect.width * .27f - 34f, 36f), entry.Plant);
+            Rect add = new Rect(rect.x + rect.width * .27f - 27f, rect.y + 7f, 23f, 24f);
+            if (Widgets.ButtonText(add, "+")) Find.WindowStack.Add(new Window_AddHarvestProduct(entry.Plant));
+            TooltipHandler.TipRegion(add, "SFRL_AddProduct".Translate());
+            bool removable = CropCatalog.CanRemoveManual(entry);
+            if (removable)
+            {
+                Rect remove = new Rect(rect.x + rect.width * .55f - 27f, rect.y + 7f, 23f, 24f);
+                TooltipHandler.TipRegion(remove, "SFRL_RemoveManualProduct".Translate());
+                if (Widgets.ButtonText(remove, "−") && CropCatalog.RemoveManualProduct(entry)) return;
+            }
             if (entry.Product != null)
-                DrawDefRow(new Rect(rect.x + 4f, rect.y + 41f, rect.width * .39f - 8f, 36f), entry.Product);
+                DrawDefRow(new Rect(rect.x + rect.width * .27f, rect.y + 3f, rect.width * .28f - (removable ? 34f : 8f), 36f), entry.Product);
             if (!entry.Supported)
             {
-                Widgets.Label(new Rect(rect.width * .40f, rect.y + 8f, rect.width * .59f, 50f),
+                Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y + 3f, rect.width * .45f, 50f),
                     (entry.Product == null ? "SFRL_NoProduct" : "SFRL_Uncounted").Translate());
                 return;
             }
+            CropRule rule = entry.Rule;
             bool ignored = rule.Ignore;
             int lower = rule.Lower, upper = rule.Upper;
-            Widgets.CheckboxLabeled(new Rect(rect.width * .40f, rect.y + 3f, rect.width * .18f, 28f),
-                "SFRL_Ignore".Translate(), ref rule.Ignore);
-            Widgets.TextFieldNumeric(new Rect(rect.width * .60f, rect.y + 3f, rect.width * .18f, 28f),
+            string ignore = "SFRL_Ignore".Translate();
+            // CheckboxLabeled 把勾选框放在矩形右端，按文字实际宽度收紧矩形使两者相邻。
+            float ignoreWidth = Text.CalcSize(ignore).x + 6f + 24f;
+            Widgets.CheckboxLabeled(new Rect(rect.x + rect.width * .55f, rect.y + 3f, ignoreWidth, 28f),
+                ignore, ref rule.Ignore);
+            Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .68f, rect.y + 3f, rect.width * .15f, 28f),
                 ref rule.Lower, ref rule.LowerBuffer, 0f, int.MaxValue);
-            Widgets.TextFieldNumeric(new Rect(rect.width * .80f, rect.y + 3f, rect.width * .18f, 28f),
+            Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .84f, rect.y + 3f, rect.width * .15f, 28f),
                 ref rule.Upper, ref rule.UpperBuffer, 0f, int.MaxValue);
             if (ignored != rule.Ignore || lower != rule.Lower || upper != rule.Upper) Settings.Changed();
             if (!Hysteresis.Valid(rule.Lower, rule.Upper) || rule.Lower == 0)
-                Widgets.Label(new Rect(rect.width * .40f, rect.y + 32f, rect.width * .60f, 30f),
+            {
+                GameFont old = Text.Font;
+                Text.Font = GameFont.Tiny;
+                Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y + 32f, rect.width * .45f, 24f),
                     (Hysteresis.Valid(rule.Lower, rule.Upper) ? "SFRL_ZeroLower" : "SFRL_InvalidThreshold").Translate());
+                Text.Font = old;
+            }
         }
-
         /// <summary>绘制一行定义图标及名称；名称过长时截断，并用悬停提示保留全名与 defName。</summary>
         private static void DrawDefRow(Rect rect, ThingDef def)
         {
@@ -158,3 +184,6 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
+
+
