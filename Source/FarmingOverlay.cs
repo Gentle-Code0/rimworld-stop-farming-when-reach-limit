@@ -6,7 +6,7 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>地图标记缓存，与库存控制共用地图组件；不扫描库存、不扫描所有植物。</summary>
     public sealed partial class MapComponent_FarmingLimits
@@ -130,5 +130,6 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 
 

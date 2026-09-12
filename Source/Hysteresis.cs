@@ -1,4 +1,4 @@
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>纯逻辑施密特触发器；不依赖游戏，便于单独验证边界行为。</summary>
     public static class Hysteresis
@@ -18,3 +18,4 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+

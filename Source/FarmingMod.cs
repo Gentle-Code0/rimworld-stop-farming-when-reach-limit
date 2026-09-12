@@ -4,13 +4,13 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>模组入口与设置界面；采用原版 GUI，不需要额外设置框架。</summary>
     public sealed class FarmingMod : Mod
     {
-        public const string ModTitle = "Stop farming when reach limit";
-        public const string HarmonyId = "GentleCode.StopFarmingWhenReachLimit";
+        public const string ModTitle = "Stop farming, it's enough!";
+        public const string HarmonyId = "GentleCode.StopFarmingItsEnough";
         public static FarmingSettings Settings;
         private readonly List<CropEntry> filtered = new List<CropEntry>();
         private Vector2 scroll;
@@ -33,7 +33,7 @@ namespace StopFarmingWhenReachLimit
             var harmony = new Harmony(HarmonyId);
             harmony.PatchAll(typeof(FarmingMod).Assembly);
             OptionalCompatibility.Install(harmony);
-            Log.Message("[Stop farming when reach limit] Initialized; " + CropCatalog.Entries.Count + " crop/product rows discovered.");
+            Log.Message("[Stop farming, it's enough!] Initialized; " + CropCatalog.Entries.Count + " crop/product rows discovered.");
         }
 
         /// <summary>返回 Mod 设置列表中显示的名称。</summary>
@@ -48,28 +48,28 @@ namespace StopFarmingWhenReachLimit
             GameFont oldFont = Text.Font;
             Text.Font = GameFont.Small;
             float y = inRect.y;
-            DrawToggle(inRect, ref y, "SFRL_Enabled", ref Settings.Enabled);
-            DrawToggle(inRect, ref y, "SFRL_ControlSowing", ref Settings.ControlSowing);
-            DrawToggle(inRect, ref y, "SFRL_ControlHarvest", ref Settings.ControlHarvest);
+            DrawToggle(inRect, ref y, "SFIE_Enabled", ref Settings.Enabled);
+            DrawToggle(inRect, ref y, "SFIE_ControlSowing", ref Settings.ControlSowing);
+            DrawToggle(inRect, ref y, "SFIE_ControlHarvest", ref Settings.ControlHarvest);
             float toggleY = y;
             DrawToggle(new Rect(inRect.x, y, inRect.width * .49f, 28f), ref toggleY,
-                "SFRL_HideSowingIcon", ref Settings.HideSowingIcon);
+                "SFIE_HideSowingIcon", ref Settings.HideSowingIcon);
             DrawToggle(new Rect(inRect.x + inRect.width * .51f, y, inRect.width * .49f, 28f), ref y,
-                "SFRL_HideHarvestIcon", ref Settings.HideHarvestIcon);
-            string explanation = "SFRL_Explanation".Translate();
+                "SFIE_HideHarvestIcon", ref Settings.HideHarvestIcon);
+            string explanation = "SFIE_Explanation".Translate();
             float explanationHeight = Mathf.Max(54f, Text.CalcHeight(explanation, inRect.width));
             Widgets.Label(new Rect(inRect.x, y, inRect.width, explanationHeight), explanation);
             y += explanationHeight + 4f;
-            // Widgets.Label(new Rect(inRect.x, y, inRect.width, 30f), "SFRL_Compatibility".Translate(
-            //     OptionalCompatibility.SmartFarmingActive ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate(),
-            //     OptionalCompatibility.HighDensityReady ? "SFRL_Detected".Translate() : "SFRL_NotDetected".Translate()));
+            // Widgets.Label(new Rect(inRect.x, y, inRect.width, 30f), "SFIE_Compatibility".Translate(
+            //     OptionalCompatibility.SmartFarmingActive ? "SFIE_Detected".Translate() : "SFIE_NotDetected".Translate(),
+            //     OptionalCompatibility.HighDensityReady ? "SFIE_Detected".Translate() : "SFIE_NotDetected".Translate()));
             y += 32f;
-            Widgets.Label(new Rect(inRect.x, y, 85f, 28f), "SFRL_Search".Translate());
+            Widgets.Label(new Rect(inRect.x, y, 85f, 28f), "SFIE_Search".Translate());
             search = Widgets.TextField(new Rect(inRect.x + 85f, y, inRect.width - 85f, 28f), search);
             y += 34f;
             if (!CropCatalog.Ready)
             {
-                Widgets.Label(new Rect(inRect.x, y, inRect.width, 48f), "SFRL_Loading".Translate());
+                Widgets.Label(new Rect(inRect.x, y, inRect.width, 48f), "SFIE_Loading".Translate());
                 Text.Font = oldFont;
                 return;
             }
@@ -122,11 +122,11 @@ namespace StopFarmingWhenReachLimit
         /// <summary>绘制与数据行一致的列标题；阈值为物品件数而非营养值或堆数。</summary>
         private static void DrawHeader(Rect rect)
         {
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width * .26f, rect.height), "SFRL_Crop".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .27f, rect.y, rect.width * .27f, rect.height), "SFRL_Products".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y, rect.width * .12f, rect.height), "SFRL_Ignore".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .77f, rect.y, rect.width * .105f, rect.height), "SFRL_Lower".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .885f, rect.y, rect.width * .105f, rect.height), "SFRL_Upper".Translate());
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width * .26f, rect.height), "SFIE_Crop".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .27f, rect.y, rect.width * .27f, rect.height), "SFIE_Products".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y, rect.width * .12f, rect.height), "SFIE_Ignore".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .77f, rect.y, rect.width * .105f, rect.height), "SFIE_Lower".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .885f, rect.y, rect.width * .105f, rect.height), "SFIE_Upper".Translate());
         }
 
         /// <summary>绘制一对作物与产物的独立设置；忽略框贴近文字，错误信息放在输入框下方。</summary>
@@ -136,12 +136,12 @@ namespace StopFarmingWhenReachLimit
             DrawDefRow(new Rect(rect.x + 4f, rect.y + 3f, rect.width * .27f - 34f, 36f), entry.Plant);
             Rect add = new Rect(rect.x + rect.width * .27f - 27f, rect.y + 7f, 23f, 24f);
             if (Widgets.ButtonText(add, "+")) Find.WindowStack.Add(new Window_AddHarvestProduct(entry.Plant));
-            TooltipHandler.TipRegion(add, "SFRL_AddProduct".Translate());
+            TooltipHandler.TipRegion(add, "SFIE_AddProduct".Translate());
             bool removable = CropCatalog.CanRemoveManual(entry);
             if (removable)
             {
                 Rect remove = new Rect(rect.x + rect.width * .55f - 27f, rect.y + 7f, 23f, 24f);
-                TooltipHandler.TipRegion(remove, "SFRL_RemoveManualProduct".Translate());
+                TooltipHandler.TipRegion(remove, "SFIE_RemoveManualProduct".Translate());
                 if (Widgets.ButtonText(remove, "−") && CropCatalog.RemoveManualProduct(entry)) return;
             }
             if (entry.Product != null)
@@ -149,16 +149,16 @@ namespace StopFarmingWhenReachLimit
             if (!entry.Supported)
             {
                 Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y + 3f, rect.width * .45f, 50f),
-                    (entry.Product == null ? "SFRL_NoProduct" : "SFRL_Uncounted").Translate());
+                    (entry.Product == null ? "SFIE_NoProduct" : "SFIE_Uncounted").Translate());
                 return;
             }
             CropRule rule = entry.Rule;
             bool ignoredSowing = rule.IgnoreSowing, ignoredHarvest = rule.IgnoreHarvest;
             int lower = rule.Lower, upper = rule.Upper;
             DrawIgnoreToggle(new Rect(rect.x + rect.width * .55f, rect.y + 3f, rect.width * .21f, 28f),
-                "SFRL_IgnoreSowing", ref rule.IgnoreSowing);
+                "SFIE_IgnoreSowing", ref rule.IgnoreSowing);
             DrawIgnoreToggle(new Rect(rect.x + rect.width * .55f, rect.y + 31f, rect.width * .21f, 28f),
-                "SFRL_IgnoreHarvest", ref rule.IgnoreHarvest);
+                "SFIE_IgnoreHarvest", ref rule.IgnoreHarvest);
             Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .77f, rect.y + 3f, rect.width * .105f, 28f),
                 ref rule.Lower, ref rule.LowerBuffer, 0f, int.MaxValue);
             Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .885f, rect.y + 3f, rect.width * .105f, 28f),
@@ -169,7 +169,7 @@ namespace StopFarmingWhenReachLimit
                 GameFont old = Text.Font;
                 Text.Font = GameFont.Tiny;
                 Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y + 58f, rect.width * .45f, 22f),
-                    (Hysteresis.Valid(rule.Lower, rule.Upper) ? "SFRL_ZeroLower" : "SFRL_InvalidThreshold").Translate());
+                    (Hysteresis.Valid(rule.Lower, rule.Upper) ? "SFIE_ZeroLower" : "SFIE_InvalidThreshold").Translate());
                 Text.Font = old;
             }
         }
@@ -187,10 +187,12 @@ namespace StopFarmingWhenReachLimit
             Widgets.DefIcon(new Rect(rect.x, rect.y + 2f, 32f, 32f), def, drawPlaceholder: true);
             string label = def.LabelCap.ToString();
             Widgets.Label(new Rect(rect.x + 40f, rect.y + 6f, rect.width - 40f, 26f), label.Truncate(rect.width - 40f));
-            TooltipHandler.TipRegion(rect, label + "\n" + def.defName + "\n" + "SFRL_IndependentRule".Translate());
+            TooltipHandler.TipRegion(rect, label + "\n" + def.defName + "\n" + "SFIE_IndependentRule".Translate());
         }
     }
 }
+
+
 
 
 

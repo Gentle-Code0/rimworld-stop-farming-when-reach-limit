@@ -1,7 +1,7 @@
 using UnityEngine;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>使用游戏自带种植区／收获图标和红叉直接叠绘，无须生成或分发贴图副本。</summary>
     [StaticConstructorOnStartup]
@@ -30,9 +30,10 @@ namespace StopFarmingWhenReachLimit
             GUI.color = oldColor;
             // 只在鼠标确实悬停时创建翻译字符串，不为每个可见标记逐帧分配文本。
             if (Mouse.IsOver(rect)) TooltipHandler.TipRegion(rect,
-                (sowing ? "SFRL_MenuPausedSowing" : "SFRL_MenuPausedHarvest").Translate());
+                (sowing ? "SFIE_MenuPausedSowing" : "SFIE_MenuPausedHarvest").Translate());
         }
     }
 }
+
 
 

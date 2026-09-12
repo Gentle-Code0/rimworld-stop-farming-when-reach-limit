@@ -4,7 +4,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>按设施缓存实际植物组成，提前排除整片暂停的收获区域；完全独立于 Smart Farming。</summary>
     public sealed partial class MapComponent_FarmingLimits
@@ -198,5 +198,6 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 
 

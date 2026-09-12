@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>逐地图保存滞回状态；热路径只查字典，库存检查绝不遍历地格、田地或物品堆。</summary>
     public sealed partial class MapComponent_FarmingLimits : MapComponent
@@ -48,7 +48,7 @@ namespace StopFarmingWhenReachLimit
         /// <summary>保存滞回记忆，保证读档后库存位于阈值区间内时不意外恢复工作。</summary>
         public override void ExposeData()
         {
-            Scribe_Collections.Look(ref savedPaused, "sfrlPausedByPlant", LookMode.Value, LookMode.Value,
+            Scribe_Collections.Look(ref savedPaused, "sfiePausedByPlant", LookMode.Value, LookMode.Value,
                 ref saveKeys, ref saveValues);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -147,5 +147,6 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 
 

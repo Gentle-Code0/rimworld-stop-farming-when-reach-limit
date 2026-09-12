@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Stop farming when reach limit</name>
+  <name>Stop farming, it's enough!</name>
   <author>"GentleCode"</author>
-  <packageId>GentleCode.StopFarmingWhenReachLimit</packageId>
+  <packageId>GentleCode.StopFarmingItsEnough</packageId>
   <supportedVersions><li>1.6</li></supportedVersions>
   <description>Automatically pause sowing and/or harvesting above each crop's upper stock limit, and resume below its lower limit. Reads vanilla map resource statistics every 600 ticks. Includes optional Smart Farming and High Density Hydroponics compatibility.
 
@@ -20,3 +20,5 @@
     <li>MapleApple.HighDensityHydroponics.Fixed.ZouHb.zades</li>
   </loadAfter>
 </ModMetaData>
+
+

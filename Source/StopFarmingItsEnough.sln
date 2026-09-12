@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StopFarmingWhenReachLimit", "StopFarmingWhenReachLimit.csproj", "{E66542F8-7229-4FF9-AB32-C23D969AB47C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StopFarmingItsEnough", "StopFarmingItsEnough.csproj", "{E66542F8-7229-4FF9-AB32-C23D969AB47C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,3 +16,4 @@ Global
 		{E66542F8-7229-4FF9-AB32-C23D969AB47C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
+

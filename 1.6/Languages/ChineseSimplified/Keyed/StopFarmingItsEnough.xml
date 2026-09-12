@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SFIE_MenuPausedSowing>因库存限额暂停播种</SFIE_MenuPausedSowing>
+  <SFIE_MenuPausedHarvest>因库存限额暂停收获</SFIE_MenuPausedHarvest>
+  <SFIE_Enabled>启用库存农业限额</SFIE_Enabled>
+  <SFIE_EnabledTip>关闭后立即解除全部库存限制。</SFIE_EnabledTip>
+  <SFIE_ControlSowing>自动暂停和恢复播种</SFIE_ControlSowing>
+  <SFIE_ControlSowingTip>超过上限暂停，低于下限恢复。已经进入生长阶段的作物继续生长。</SFIE_ControlSowingTip>
+  <SFIE_ControlHarvest>自动暂停和恢复收获</SFIE_ControlHarvest>
+  <SFIE_ControlHarvestTip>与播种共用各作物＋产物的阈值和滞回状态。也会阻止种植区及玩家种植设施内的指定收获和已领取收获任务。不影响砍除指令和这些区域以外的野生植物。未收获作物仍会衰老和死亡。默认关闭。</SFIE_ControlHarvestTip>
+  <SFIE_Explanation>每 600 ticks 读取原版库存统计。超过上限暂停，低于下限解除。播种与收获分别设置忽略；默认两项均勾选，取消相应勾选后才应用该类限制。</SFIE_Explanation>
+  <SFIE_Compatibility>Smart Farming：{0} | High Density Hydroponics 适配：{1}</SFIE_Compatibility>
+  <SFIE_Detected>已启用</SFIE_Detected>
+  <SFIE_NotDetected>未启用</SFIE_NotDetected>
+  <SFIE_Search>搜索</SFIE_Search>
+  <SFIE_Loading>植物定义仍在加载中。</SFIE_Loading>
+  <SFIE_CropProduct>作物 → 收获产物</SFIE_CropProduct>
+  <SFIE_Ignore>忽略限制</SFIE_Ignore>
+  <SFIE_Lower>下限</SFIE_Lower>
+  <SFIE_Upper>上限</SFIE_Upper>
+  <SFIE_NoProduct>尚无已知收获产物；可用＋关联。</SFIE_NoProduct>
+  <SFIE_Uncounted>产物未纳入原版统计；不参与控制。</SFIE_Uncounted>
+  <SFIE_IndependentRule>每个作物＋产物共用阈值和滞回状态，分别设置忽略播种与忽略收获。任一未忽略该类工作的产物仍暂停，该类工作就保持暂停。数量为物品件数，阈值修改在下一个 600-tick 检查点生效。</SFIE_IndependentRule>
+  <SFIE_InvalidThreshold>要求 0 ≤ 下限 &lt; 上限；当前规则不生效。</SFIE_InvalidThreshold>
+  <SFIE_ZeroLower>下限为 0：无法自动恢复。</SFIE_ZeroLower>
+  <SFIE_PausedBoth>{0}：因库存限额暂停播种和收获。</SFIE_PausedBoth>
+  <SFIE_PausedSowing>{0}：因库存限额暂停播种。</SFIE_PausedSowing>
+  <SFIE_PausedHarvest>{0}：因库存限额暂停收获。</SFIE_PausedHarvest>
+  <SFIE_HideHarvestIcon>隐藏暂停收获图标</SFIE_HideHarvestIcon>
+  <SFIE_Products>收获产物</SFIE_Products>
+  <SFIE_HideHarvestIconTip>仅隐藏地图上的暂停收获图标。</SFIE_HideHarvestIconTip>
+  <SFIE_Crop>作物</SFIE_Crop>
+  <SFIE_HideSowingIconTip>仅隐藏地图上的暂停播种图标。</SFIE_HideSowingIconTip>
+  <SFIE_AddProductTitle>为 {0} 关联收获产物</SFIE_AddProductTitle>
+  <SFIE_HideSowingIcon>隐藏暂停播种图标</SFIE_HideSowingIcon>
+  <SFIE_AddProduct>手动关联额外收获产物。新关联默认忽略。标准产物自动识别；通过标准额外收获接口提供的产物在首次实际收获时识别。</SFIE_AddProduct>
+  <SFIE_RemoveManualProduct>删除此手动关联及其阈值。仅可删除手动创建的关联；自动识别及旧版来源不明的关联不可删除。</SFIE_RemoveManualProduct>
+  <SFIE_IgnoreSowing>忽略播种限制</SFIE_IgnoreSowing>
+  <SFIE_IgnoreHarvestTip>勾选后，此作物＋产物规则不限制收获。播种由独立的忽略播种开关控制。默认勾选。</SFIE_IgnoreHarvestTip>
+  <SFIE_IgnoreHarvest>忽略收获限制</SFIE_IgnoreHarvest>
+  <SFIE_IgnoreSowingTip>勾选后，此作物＋产物规则不限制播种。收获由独立的忽略收获开关控制。默认勾选。</SFIE_IgnoreSowingTip>
+</LanguageData>

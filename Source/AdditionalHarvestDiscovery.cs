@@ -4,7 +4,7 @@ using System.Reflection;
 using HarmonyLib;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>在游戏实际枚举额外收获物时旁观产物；绝不创建样本植物或提前执行收获代码。</summary>
     [HarmonyPatch]
@@ -48,4 +48,5 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 

@@ -2,7 +2,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>播种／收获统一入口；只做当前目标的格子查询和状态查询，不生成库存扫描。</summary>
     public static class FarmingGate
@@ -80,8 +80,9 @@ namespace StopFarmingWhenReachLimit
             bool sow = Enabled(true) && component.IsPaused(plant, true),
                 harvest = Enabled(false) && component.IsPaused(plant, false);
             if (!sow && !harvest) return null;
-            return (sow && harvest ? "SFRL_PausedBoth" : sow ? "SFRL_PausedSowing" : "SFRL_PausedHarvest").Translate(plant.LabelCap);
+            return (sow && harvest ? "SFIE_PausedBoth" : sow ? "SFIE_PausedSowing" : "SFIE_PausedHarvest").Translate(plant.LabelCap);
         }
     }
 }
+
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>一个作物＋一种收获产物的配置行；同种作物可以有多行。</summary>
     public sealed class CropEntry
@@ -143,4 +143,5 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 

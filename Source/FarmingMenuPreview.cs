@@ -4,7 +4,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>右键菜单专用、线程局部的只读预览上下文，不改变任何配置或库存暂停状态。</summary>
     internal static class FarmingMenuPreview
@@ -37,7 +37,7 @@ namespace StopFarmingWhenReachLimit
         internal static void DisableOption(FloatMenuOption option)
         {
             if (option == null || !Active) return;
-            option.Label += " (" + (Current == PauseKind.Sowing ? "SFRL_MenuPausedSowing" : "SFRL_MenuPausedHarvest").Translate() + ")";
+            option.Label += " (" + (Current == PauseKind.Sowing ? "SFIE_MenuPausedSowing" : "SFIE_MenuPausedHarvest").Translate() + ")";
             option.Disabled = true; // 原版 Disabled 属性清空 action，没有可执行的强制工作回调。
             option.autoTakeable = false;
             // DecoratePrioritizedTask 可能添加“强制中断他人”的额外按钮，也必须一并移除。
@@ -79,3 +79,4 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+

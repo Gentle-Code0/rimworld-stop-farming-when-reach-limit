@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>来源不明用于兼容旧设置，不能假定它是手工关联。</summary>
     public enum ProductLinkSource { Unknown, Automatic, Manual }
@@ -138,6 +138,7 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 
 
 

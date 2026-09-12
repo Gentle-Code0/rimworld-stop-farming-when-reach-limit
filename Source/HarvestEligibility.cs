@@ -5,7 +5,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>仅按稳定定义分类未来普通自动收获的可能性；不读取 Growth、LifeStage 或 HarvestableNow。</summary>
     internal static class HarvestEligibility
@@ -56,3 +56,4 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+

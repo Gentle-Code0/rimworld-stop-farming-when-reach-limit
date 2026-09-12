@@ -5,7 +5,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>可选兼容层；使用运行时类型检测，程序集不静态引用任一农业模组。</summary>
     internal static class OptionalCompatibility
@@ -28,7 +28,7 @@ namespace StopFarmingWhenReachLimit
                 || harvest == null || harvest.ReturnType != typeof(void) || harvest.GetParameters().Length != 0
                 || currentPlant == null || currentPlant.FieldType != typeof(ThingDef))
             {
-                Log.Error("[Stop farming when reach limit] HDH API differs from the supported 1.6 version; dedicated compatibility was not installed.");
+                Log.Error("[Stop farming, it's enough!] HDH API differs from the supported 1.6 version; dedicated compatibility was not installed.");
                 return;
             }
             harmony.Patch(sow, postfix: new HarmonyMethod(typeof(OptionalCompatibility), nameof(HydroSowPostfix)) { priority = Priority.Last });
@@ -66,3 +66,5 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
+

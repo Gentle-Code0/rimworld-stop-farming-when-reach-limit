@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>为使用完全自定义收获代码的作物手动关联产物；资源列表仅在打开窗口时建立。</summary>
     internal sealed class Window_AddHarvestProduct : Window
@@ -31,7 +31,7 @@ namespace StopFarmingWhenReachLimit
         /// <summary>提供可搜索、虚拟化的产物选择列表；关联后默认忽略，等待玩家配置阈值。</summary>
         public override void DoWindowContents(Rect rect)
         {
-            Widgets.Label(new Rect(0f, 0f, rect.width - 30f, 30f), "SFRL_AddProductTitle".Translate(plant.LabelCap));
+            Widgets.Label(new Rect(0f, 0f, rect.width - 30f, 30f), "SFIE_AddProductTitle".Translate(plant.LabelCap));
             search = Widgets.TextField(new Rect(0f, 36f, rect.width, 28f), search);
             if (previousSearch != search)
             {
@@ -67,4 +67,5 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 

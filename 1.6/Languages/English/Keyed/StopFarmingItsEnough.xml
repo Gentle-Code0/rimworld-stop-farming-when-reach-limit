@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SFIE_MenuPausedSowing>Sowing paused by inventory limit</SFIE_MenuPausedSowing>
+  <SFIE_MenuPausedHarvest>Harvesting paused by inventory limit</SFIE_MenuPausedHarvest>
+  <SFIE_Enabled>Enable inventory farming limits</SFIE_Enabled>
+  <SFIE_EnabledTip>Disabling this releases all inventory restrictions immediately.</SFIE_EnabledTip>
+  <SFIE_ControlSowing>Automatically pause and resume sowing</SFIE_ControlSowing>
+  <SFIE_ControlSowingTip>Pause above the upper limit; resume below the lower limit. Already growing crops continue growing.</SFIE_ControlSowingTip>
+  <SFIE_ControlHarvest>Automatically pause and resume harvesting</SFIE_ControlHarvest>
+  <SFIE_ControlHarvestTip>Uses the same per-crop/product thresholds and hysteresis state as sowing. Also blocks designated and already assigned harvest jobs inside growing zones and player growing facilities. Cutting commands and wild plants outside these areas are unaffected. Unharvested crops still age and can die. Disabled by default. </SFIE_ControlHarvestTip>
+  <SFIE_Explanation>Read vanilla stock counts every 600 ticks. Above upper: pause; below lower: clear. Sowing and harvesting have separate ignore checkboxes. Both are checked by default; uncheck the relevant box to apply that limit.</SFIE_Explanation>
+  <SFIE_Compatibility>Smart Farming: {0} | High Density Hydroponics adapter: {1}</SFIE_Compatibility>
+  <SFIE_Detected>active</SFIE_Detected>
+  <SFIE_NotDetected>inactive</SFIE_NotDetected>
+  <SFIE_Search>Search</SFIE_Search>
+  <SFIE_Loading>Crop definitions are still loading.</SFIE_Loading>
+  <SFIE_CropProduct>Crop → harvested product</SFIE_CropProduct>
+  <SFIE_Ignore>Ignore limits</SFIE_Ignore>
+  <SFIE_Lower>Lower limit</SFIE_Lower>
+  <SFIE_Upper>Upper limit</SFIE_Upper>
+  <SFIE_NoProduct>No known harvested product yet; link one with +.</SFIE_NoProduct>
+  <SFIE_Uncounted>Product is not counted by vanilla; not controlled.</SFIE_Uncounted>
+  <SFIE_IndependentRule>Each crop/product pair has shared thresholds and hysteresis, with separate sowing and harvesting ignores. A job remains paused while any product not ignored for that job remains paused. Counts are item units. Threshold changes apply at the next 600-tick check.</SFIE_IndependentRule>
+  <SFIE_InvalidThreshold>Require 0 ≤ lower &lt; upper; rule inactive.</SFIE_InvalidThreshold>
+  <SFIE_ZeroLower>Lower = 0: automatic resumption is impossible.</SFIE_ZeroLower>
+  <SFIE_PausedBoth>{0}: sowing and harvesting paused by inventory limit.</SFIE_PausedBoth>
+  <SFIE_PausedSowing>{0}: sowing paused by inventory limit.</SFIE_PausedSowing>
+  <SFIE_PausedHarvest>{0}: harvesting paused by inventory limit.</SFIE_PausedHarvest>
+  <SFIE_HideHarvestIcon>Hide paused harvesting icon</SFIE_HideHarvestIcon>
+  <SFIE_Products>Harvested product</SFIE_Products>
+  <SFIE_HideHarvestIconTip>Only hides the paused harvesting icon on the map.</SFIE_HideHarvestIconTip>
+  <SFIE_Crop>Crop</SFIE_Crop>
+  <SFIE_HideSowingIconTip>Only hides the paused sowing icon on the map.</SFIE_HideSowingIconTip>
+  <SFIE_AddProductTitle>Link a harvested product to {0}</SFIE_AddProductTitle>
+  <SFIE_HideSowingIcon>Hide paused sowing icon</SFIE_HideSowingIcon>
+  <SFIE_AddProduct>Manually link an additional harvested product. New links are ignored by default. Standard products are detected automatically; products using the standard additional-yield interface are detected on their first actual harvest.</SFIE_AddProduct>
+  <SFIE_RemoveManualProduct>Delete this manual link and its thresholds. Only manually created links can be deleted. Automatically detected links and older links with unknown origin are protected.</SFIE_RemoveManualProduct>
+  <SFIE_IgnoreSowing>Ignore sowing limit</SFIE_IgnoreSowing>
+  <SFIE_IgnoreHarvestTip>Checked: this crop/product rule does not restrict harvesting. Sowing is controlled by its own ignore checkbox. Checked by default.</SFIE_IgnoreHarvestTip>
+  <SFIE_IgnoreHarvest>Ignore harvest limit</SFIE_IgnoreHarvest>
+  <SFIE_IgnoreSowingTip>Checked: this crop/product rule does not restrict sowing. Harvesting is controlled by its own ignore checkbox. Checked by default.</SFIE_IgnoreSowingTip>
+</LanguageData>

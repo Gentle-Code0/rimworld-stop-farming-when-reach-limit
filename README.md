@@ -1,7 +1,12 @@
-# Stop farming when reach limit
+# Stop farming, it's enough!
 
 作者沿用 visitor-spot：`"GentleCode"`。适用于 RimWorld **1.6**，开发时对照本机 **1.6.4871 rev590**。
 
+## 1.4.2 内部标识与目录统一
+
+显示名称为 **Stop farming, it's enough!**。目录、Visual Studio 项目、程序集和命名空间统一为 **StopFarmingItsEnough**；packageId 和 HarmonyId 为 **GentleCode.StopFarmingItsEnough**。语言键前缀统一为 SFIE_，地图状态字段使用 sfiePausedByPlant。
+
+打开 Source/StopFarmingItsEnough.sln，输出为 1.6/Assemblies/StopFarmingItsEnough.dll。旧 DLL 已移除，避免重复加载。本次按测试阶段改名，不增加旧标识迁移层；游戏中需要重新启用模组，旧设置或旧存档组件不保证自动迁移。
 ## 1.4 独立忽略播种与收获
 
 每条“作物＋产物”规则现在有两个独立勾选框，位于“忽略限制”列中：
@@ -65,7 +70,7 @@
 - 完全自定义产出代码不保证能自动识别。点击作物旁 **＋**，搜索并关联产物，再配置其阈值、取消忽略；错误的新版手动关联可点击产物旁的 − 删除，也可勾选忽略。同一关联不会重复添加。手工关联不改变作物实际产出。
 - 模组作者也可以在植物 ThingDef 的 modExtensions 中声明下列扩展，让副产物在启动时直接出现：
 
-    <li Class="StopFarmingWhenReachLimit.HarvestProductsExtension">
+    <li Class="StopFarmingItsEnough.HarvestProductsExtension">
       <products>
         <li>实际副产物DefName</li>
       </products>
@@ -84,10 +89,10 @@
 
 ## 安装与使用
 
-1. 将整个模组目录放在 RimWorld/Mods 中；本机已处于该位置，已提供编译好的 `1.6/Assemblies/StopFarmingWhenReachLimit.dll`。
-2. 在游戏模组列表启用 **Harmony** 和 **Stop farming when reach limit**。
+1. 将整个模组目录放在 RimWorld/Mods 中；本机已处于该位置，已提供编译好的 `1.6/Assemblies/StopFarmingItsEnough.dll`。
+2. 在游戏模组列表启用 **Harmony** 和 **Stop farming, it's enough!**。
 3. 如果启用了 **Smart Farming** 或 **High Density Hydroponics**，把本模组放在它们下方。两者均为可选项，About.xml 只将 Harmony 列为强依赖。
-4. 重启游戏，在“选项 → 模组设置 → Stop farming when reach limit”中配置。
+4. 重启游戏，在“选项 → 模组设置 → Stop farming, it's enough!”中配置。
 5. 总开关和自动播种控制默认开启；自动收获控制默认关闭；每种新发现的作物＋产物默认勾选“忽略”。搜索目标植物，设置上下限后取消“忽略”。
 6. 播种和收获控制可以分别启用；启用的功能共用该作物各产物的上下限和滞回状态。设置示例：水稻下限 500、上限 1500；大米库存严格大于 1500 时暂停，严格小于 500 时恢复。
 7. 库存等于上下限或位于两者之间时，保持上次状态。首次启用没有历史状态的规则，在区间内默认不暂停。
@@ -140,7 +145,7 @@
 
 ## Visual Studio 打开与编译
 
-打开 `Source/StopFarmingWhenReachLimit.sln`，选择 **Release / Any CPU** 后生成。
+打开 `Source/StopFarmingItsEnough.sln`，选择 **Release / Any CPU** 后生成。
 
 要求 Visual Studio 2022（安装 .NET 桌面开发工作负载、.NET Framework 4.8 targeting pack 和可用的 .NET SDK）。项目采用 SDK 风格 C# 类库、目标 **.NET Framework 4.8**、C# 7.3。
 
@@ -149,16 +154,16 @@
 命令行编译：
 
 ```powershell
-dotnet build '.\Source\StopFarmingWhenReachLimit.sln' -c Release
+dotnet build '.\Source\StopFarmingItsEnough.sln' -c Release
 ```
 
 如果游戏或 Harmony 位于其他位置，传入 MSBuild 属性，或在 Source 下自行创建 Directory.Build.props 定义相同属性：
 
 ```powershell
-dotnet build '.\Source\StopFarmingWhenReachLimit.sln' -c Release '-p:RimWorldDir=D:\Games\RimWorld' '-p:HarmonyPath=D:\Mods\Harmony\Current\Assemblies\0Harmony.dll'
+dotnet build '.\Source\StopFarmingItsEnough.sln' -c Release '-p:RimWorldDir=D:\Games\RimWorld' '-p:HarmonyPath=D:\Mods\Harmony\Current\Assemblies\0Harmony.dll'
 ```
 
-输出固定到 `1.6/Assemblies/StopFarmingWhenReachLimit.dll`。根目录 `loadFolders.xml` 只加载 1.6 内容。无需为此纯代码模组创建空 Defs、Textures 或复制 visitor-spot 的建筑、美术和发布 ID。
+输出固定到 `1.6/Assemblies/StopFarmingItsEnough.dll`。根目录 `loadFolders.xml` 只加载 1.6 内容。无需为此纯代码模组创建空 Defs、Textures 或复制 visitor-spot 的建筑、美术和发布 ID。
 
 ## 代码结构和实现过程
 
@@ -179,7 +184,7 @@ dotnet build '.\Source\StopFarmingWhenReachLimit.sln' -c Release '-p:RimWorldDir
 
 Version 1.1 adds separate 32 UI-pixel crop/product icons in settings and 28 UI-pixel map markers using vanilla growing/harvest icons plus the vanilla cancel cross. Two pause markers sit side by side with a 4 UI-pixel gap. Map markers replace the extra inspect-pane text. Normal right-click work options remain visible but disabled during an inventory pause, with a parenthesized reason. Existing manual Off, Smart Farming, skill and reachability rules still apply. No custom texture files are needed.
 
-Enable Harmony and this mod. Load this mod **after** Smart Farming and High Density Hydroponics if either is enabled; neither is required. Restart RimWorld, then open Options → Mod settings → Stop farming when reach limit.
+Enable Harmony and this mod. Load this mod **after** Smart Farming and High Density Hydroponics if either is enabled; neither is required. Restart RimWorld, then open Options → Mod settings → Stop farming, it's enough!.
 
 The master switch and sowing control default to on; harvest control defaults to off. Newly discovered crops default to **Ignore**. Set a crop's limits and uncheck Ignore. Each crop has independent limits and hysteresis memory, even if multiple crops produce the same item. Sowing and harvesting have separate global switches but share that crop's limits and state.
 
@@ -189,7 +194,10 @@ Smart Farming modes and manual Off are preserved. Inventory limits also apply in
 
 The mod reads the existing vanilla resource-count dictionary; it never rescans stored items. Standard mod crops are discovered automatically. Unsupported or non-counted products are skipped. Stock-count refresh and check delays mean this is not a hard cap. Paused crops may still age and die.
 
-Open `Source/StopFarmingWhenReachLimit.sln` in Visual Studio 2022 with the .NET Framework 4.8 targeting pack and .NET SDK installed. Build Release / Any CPU. Set `RimWorldDir` and `HarmonyPath` MSBuild properties if your installation differs. Output goes to `1.6/Assemblies`.
+Open `Source/StopFarmingItsEnough.sln` in Visual Studio 2022 with the .NET Framework 4.8 targeting pack and .NET SDK installed. Build Release / Any CPU. Set `RimWorldDir` and `HarmonyPath` MSBuild properties if your installation differs. Output goes to `1.6/Assemblies`.
+
+
+
 
 
 

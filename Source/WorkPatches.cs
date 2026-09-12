@@ -4,7 +4,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace StopFarmingWhenReachLimit
+namespace StopFarmingItsEnough
 {
     /// <summary>在原版遍历整片田地之前排除暂停播种的设施，避免无谓逐格查找播种工作。</summary>
     [HarmonyPatch(typeof(WorkGiver_GrowerSow), "ExtraRequirements")]
@@ -97,4 +97,5 @@ namespace StopFarmingWhenReachLimit
     }
 
 }
+
 

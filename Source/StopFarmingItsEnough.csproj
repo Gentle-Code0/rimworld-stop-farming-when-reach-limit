@@ -2,8 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>7.3</LangVersion>
-    <AssemblyName>StopFarmingWhenReachLimit</AssemblyName>
-    <RootNamespace>StopFarmingWhenReachLimit</RootNamespace>
+    <AssemblyName>StopFarmingItsEnough</AssemblyName>
+    <RootNamespace>StopFarmingItsEnough</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -27,3 +27,4 @@
     <Error Condition="!Exists('$(HarmonyPath)')" Text="Set HarmonyPath to the installed Harmony mod's 0Harmony.dll (see README)." />
   </Target>
 </Project>
+
