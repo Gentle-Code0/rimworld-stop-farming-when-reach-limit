@@ -8,7 +8,7 @@
   <SFRL_ControlSowingTip>超过上限暂停，低于下限恢复。已经进入生长阶段的作物继续生长。</SFRL_ControlSowingTip>
   <SFRL_ControlHarvest>自动暂停和恢复收获</SFRL_ControlHarvest>
   <SFRL_ControlHarvestTip>与播种共用各作物＋产物的阈值和滞回状态。也会阻止种植区及玩家种植设施内的指定收获和已领取收获任务。不影响砍除指令和这些区域以外的野生植物。未收获作物仍会衰老和死亡。默认关闭。</SFRL_ControlHarvestTip>
-  <SFRL_Explanation>每 600 ticks 读取原版库存统计。各产物超过上限暂停、低于下限解除暂停；任一未忽略产物达成条件就会暂停。新产物默认忽略。</SFRL_Explanation>
+  <SFRL_Explanation>每 600 ticks 读取原版库存统计。超过上限暂停，低于下限解除。播种与收获分别设置忽略；默认两项均勾选，取消相应勾选后才应用该类限制。</SFRL_Explanation>
   <SFRL_Compatibility>Smart Farming：{0} | High Density Hydroponics 适配：{1}</SFRL_Compatibility>
   <SFRL_Detected>已启用</SFRL_Detected>
   <SFRL_NotDetected>未启用</SFRL_NotDetected>
@@ -20,7 +20,7 @@
   <SFRL_Upper>上限</SFRL_Upper>
   <SFRL_NoProduct>尚无已知收获产物；可用＋关联。</SFRL_NoProduct>
   <SFRL_Uncounted>产物未纳入原版统计；不参与控制。</SFRL_Uncounted>
-  <SFRL_IndependentRule>每个“作物＋产物”独立设置阈值和滞回状态。任一未忽略产物仍暂停，整种作物就保持暂停。相同产物的不同作物互不覆盖。数量为物品件数，阈值修改在下一个 600-tick 检查点生效。</SFRL_IndependentRule>
+  <SFRL_IndependentRule>每个作物＋产物共用阈值和滞回状态，分别设置忽略播种与忽略收获。任一未忽略该类工作的产物仍暂停，该类工作就保持暂停。数量为物品件数，阈值修改在下一个 600-tick 检查点生效。</SFRL_IndependentRule>
   <SFRL_InvalidThreshold>要求 0 ≤ 下限 &lt; 上限；当前规则不生效。</SFRL_InvalidThreshold>
   <SFRL_ZeroLower>下限为 0：无法自动恢复。</SFRL_ZeroLower>
   <SFRL_PausedBoth>{0}：因库存限额暂停播种和收获。</SFRL_PausedBoth>
@@ -35,4 +35,8 @@
   <SFRL_HideSowingIcon>隐藏暂停播种图标</SFRL_HideSowingIcon>
   <SFRL_AddProduct>手动关联额外收获产物。新关联默认忽略。标准产物自动识别；通过标准额外收获接口提供的产物在首次实际收获时识别。</SFRL_AddProduct>
   <SFRL_RemoveManualProduct>删除此手动关联及其阈值。仅可删除手动创建的关联；自动识别及旧版来源不明的关联不可删除。</SFRL_RemoveManualProduct>
+  <SFRL_IgnoreSowing>忽略播种限制</SFRL_IgnoreSowing>
+  <SFRL_IgnoreHarvestTip>勾选后，此作物＋产物规则不限制收获。播种由独立的忽略播种开关控制。默认勾选。</SFRL_IgnoreHarvestTip>
+  <SFRL_IgnoreHarvest>忽略收获限制</SFRL_IgnoreHarvest>
+  <SFRL_IgnoreSowingTip>勾选后，此作物＋产物规则不限制播种。收获由独立的忽略收获开关控制。默认勾选。</SFRL_IgnoreSowingTip>
 </LanguageData>

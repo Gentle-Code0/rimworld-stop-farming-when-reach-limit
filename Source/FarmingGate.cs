@@ -29,7 +29,7 @@ namespace StopFarmingWhenReachLimit
             // 选项在交给菜单前立即设为 Disabled，作用域在异常路径也会恢复，绝不执行工作。
             if (!Enabled(sowing) || FarmingMenuPreview.Active) return false;
             MapComponent_FarmingLimits component = MapComponent_FarmingLimits.For(map);
-            return component != null && component.IsPaused(plant);
+            return component != null && component.IsPaused(plant, sowing);
         }
 
         /// <summary>以当前设施设定的作物判断播种；不修改 allowSow 或 Smart Farming 的 sowMode。</summary>
@@ -76,10 +76,12 @@ namespace StopFarmingWhenReachLimit
         public static string InspectStatus(Map map, ThingDef plant)
         {
             MapComponent_FarmingLimits component = MapComponent_FarmingLimits.For(map);
-            if (component == null || !component.IsPaused(plant)) return null;
-            bool sow = Enabled(true), harvest = Enabled(false);
+            if (component == null) return null;
+            bool sow = Enabled(true) && component.IsPaused(plant, true),
+                harvest = Enabled(false) && component.IsPaused(plant, false);
             if (!sow && !harvest) return null;
             return (sow && harvest ? "SFRL_PausedBoth" : sow ? "SFRL_PausedSowing" : "SFRL_PausedHarvest").Translate(plant.LabelCap);
         }
     }
 }
+

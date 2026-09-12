@@ -8,19 +8,19 @@
   <SFRL_ControlSowingTip>Pause above the upper limit; resume below the lower limit. Already growing crops continue growing.</SFRL_ControlSowingTip>
   <SFRL_ControlHarvest>Automatically pause and resume harvesting</SFRL_ControlHarvest>
   <SFRL_ControlHarvestTip>Uses the same per-crop/product thresholds and hysteresis state as sowing. Also blocks designated and already assigned harvest jobs inside growing zones and player growing facilities. Cutting commands and wild plants outside these areas are unaffected. Unharvested crops still age and can die. Disabled by default. </SFRL_ControlHarvestTip>
-  <SFRL_Explanation>Read vanilla stock counts every 600 ticks. Each product pauses above its upper limit and clears below its lower limit. Any non-ignored product still paused keeps the crop paused. New products are ignored.</SFRL_Explanation>
+  <SFRL_Explanation>Read vanilla stock counts every 600 ticks. Above upper: pause; below lower: clear. Sowing and harvesting have separate ignore checkboxes. Both are checked by default; uncheck the relevant box to apply that limit.</SFRL_Explanation>
   <SFRL_Compatibility>Smart Farming: {0} | High Density Hydroponics adapter: {1}</SFRL_Compatibility>
   <SFRL_Detected>active</SFRL_Detected>
   <SFRL_NotDetected>inactive</SFRL_NotDetected>
   <SFRL_Search>Search</SFRL_Search>
   <SFRL_Loading>Crop definitions are still loading.</SFRL_Loading>
   <SFRL_CropProduct>Crop → harvested product</SFRL_CropProduct>
-  <SFRL_Ignore>Ignore</SFRL_Ignore>
+  <SFRL_Ignore>Ignore limits</SFRL_Ignore>
   <SFRL_Lower>Lower limit</SFRL_Lower>
   <SFRL_Upper>Upper limit</SFRL_Upper>
   <SFRL_NoProduct>No known harvested product yet; link one with +.</SFRL_NoProduct>
   <SFRL_Uncounted>Product is not counted by vanilla; not controlled.</SFRL_Uncounted>
-  <SFRL_IndependentRule>Each crop/product pair has independent thresholds and hysteresis. Any non-ignored product still paused keeps the crop paused. Crops sharing a product do not overwrite each other. Counts are item units; threshold changes apply at the next 600-tick check.</SFRL_IndependentRule>
+  <SFRL_IndependentRule>Each crop/product pair has shared thresholds and hysteresis, with separate sowing and harvesting ignores. A job remains paused while any product not ignored for that job remains paused. Counts are item units. Threshold changes apply at the next 600-tick check.</SFRL_IndependentRule>
   <SFRL_InvalidThreshold>Require 0 ≤ lower &lt; upper; rule inactive.</SFRL_InvalidThreshold>
   <SFRL_ZeroLower>Lower = 0: automatic resumption is impossible.</SFRL_ZeroLower>
   <SFRL_PausedBoth>{0}: sowing and harvesting paused by inventory limit.</SFRL_PausedBoth>
@@ -35,4 +35,8 @@
   <SFRL_HideSowingIcon>Hide paused sowing icon</SFRL_HideSowingIcon>
   <SFRL_AddProduct>Manually link an additional harvested product. New links are ignored by default. Standard products are detected automatically; products using the standard additional-yield interface are detected on their first actual harvest.</SFRL_AddProduct>
   <SFRL_RemoveManualProduct>Delete this manual link and its thresholds. Only manually created links can be deleted. Automatically detected links and older links with unknown origin are protected.</SFRL_RemoveManualProduct>
+  <SFRL_IgnoreSowing>Ignore sowing limit</SFRL_IgnoreSowing>
+  <SFRL_IgnoreHarvestTip>Checked: this crop/product rule does not restrict harvesting. Sowing is controlled by its own ignore checkbox. Checked by default.</SFRL_IgnoreHarvestTip>
+  <SFRL_IgnoreHarvest>Ignore harvest limit</SFRL_IgnoreHarvest>
+  <SFRL_IgnoreSowingTip>Checked: this crop/product rule does not restrict sowing. Harvesting is controlled by its own ignore checkbox. Checked by default.</SFRL_IgnoreSowingTip>
 </LanguageData>

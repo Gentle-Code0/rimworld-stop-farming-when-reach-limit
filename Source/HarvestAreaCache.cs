@@ -55,7 +55,7 @@ namespace StopFarmingWhenReachLimit
             }
             if (area.UncertainCells != 0 || area.Plants.Count != 1) return false;
             // 不使用当前选择的下一轮作物；按地上实际植物查询已有库存锁。
-            foreach (KeyValuePair<ThingDef, int> pair in area.Plants) return IsPaused(pair.Key);
+            foreach (KeyValuePair<ThingDef, int> pair in area.Plants) return IsPaused(pair.Key, false);
             return false;
         }
 
@@ -198,4 +198,5 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 

@@ -2,7 +2,22 @@
 
 作者沿用 visitor-spot：`"GentleCode"`。适用于 RimWorld **1.6**，开发时对照本机 **1.6.4871 rev590**。
 
-## 1.3.1 按定义过滤不会自动收获的植物
+## 1.4 独立忽略播种与收获
+
+每条“作物＋产物”规则现在有两个独立勾选框，位于“忽略限制”列中：
+
+- **忽略播种**：勾选后，该产物不对该作物的播种施加库存限制。
+- **忽略收获**：勾选后，该产物不对该作物的收获施加库存限制。
+- 新发现植物、自动发现副产物、手动新建关联默认两项都勾选。取消需要控制的那一项即可生效；总开关及对应的自动控制开关也需要开启。
+- 旧配置的 ignore 值同时迁移给两个方向，保留已有规则的效果；不会将玩家已启用的限额全部重置。新文件显式保存 ignoreSowing 和 ignoreHarvest，读取时新字段优先于旧字段。
+- 上下阈值和每个产物的滞回记忆仍共用，不增加第二套库存扫描。每类工作分别汇总：只要该作物某个未忽略此类工作的产物仍处于暂停状态，此类工作就暂停。不同产物可以分别限制不同工作。
+- 勾选忽略立即释放该产物在对应方向上的限制。取消忽略和阈值修改仍在下一次 600-tick 检查更新；删除手动关联会立即释放其两个方向的限制。其他产物仍有效的限制继续保留。
+- 暂停图标、右键灰色原因、任务结束条件、HDH 适配及收获设施搜索缓存均使用各自方向的忽略开关。忽略播种不会意外解除收获预过滤；忽略收获会立即放行收获设施缓存。
+- 两个忽略框仍紧跟文字。每行增加高度以容纳两个开关，植物与产物仍分别显示图标，阈值列位于右侧。
+
+例如：只希望库存过量时停播种、继续收获，取消“忽略播种”而保留“忽略收获”；反之则交换两项勾选状态。
+
+## 1.3.1 按定义过滤不会自动收获的植物（保留）
 
 原版提供 PlantProperties.Harvestable（当前版本由 harvestYield > 0.001 派生）和 autoHarvestable。Plant.HarvestableNow 则是随生长改变的当前状态，本优化不调用它，也不轮询 Growth、LifeStage 或 CanYieldNow。
 
@@ -175,6 +190,7 @@ Smart Farming modes and manual Off are preserved. Inventory limits also apply in
 The mod reads the existing vanilla resource-count dictionary; it never rescans stored items. Standard mod crops are discovered automatically. Unsupported or non-counted products are skipped. Stock-count refresh and check delays mean this is not a hard cap. Paused crops may still age and die.
 
 Open `Source/StopFarmingWhenReachLimit.sln` in Visual Studio 2022 with the .NET Framework 4.8 targeting pack and .NET SDK installed. Build Release / Any CPU. Set `RimWorldDir` and `HarmonyPath` MSBuild properties if your installation differs. Output goes to `1.6/Assemblies`.
+
 
 
 

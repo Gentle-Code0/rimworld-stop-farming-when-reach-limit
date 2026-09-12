@@ -16,7 +16,7 @@ namespace StopFarmingWhenReachLimit
         private Vector2 scroll;
         private string search = "";
         private string previousSearch;
-        private const float RowHeight = 56f;
+        private const float RowHeight = 80f;
         private int catalogRevision = -1;
 
         /// <summary>读取设置；待所有模组加载完成后安装补丁并发现植物，确保可选模组类型可用。</summary>
@@ -125,8 +125,8 @@ namespace StopFarmingWhenReachLimit
             Widgets.Label(new Rect(rect.x, rect.y, rect.width * .26f, rect.height), "SFRL_Crop".Translate());
             Widgets.Label(new Rect(rect.x + rect.width * .27f, rect.y, rect.width * .27f, rect.height), "SFRL_Products".Translate());
             Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y, rect.width * .12f, rect.height), "SFRL_Ignore".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .68f, rect.y, rect.width * .15f, rect.height), "SFRL_Lower".Translate());
-            Widgets.Label(new Rect(rect.x + rect.width * .84f, rect.y, rect.width * .15f, rect.height), "SFRL_Upper".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .77f, rect.y, rect.width * .105f, rect.height), "SFRL_Lower".Translate());
+            Widgets.Label(new Rect(rect.x + rect.width * .885f, rect.y, rect.width * .105f, rect.height), "SFRL_Upper".Translate());
         }
 
         /// <summary>绘制一对作物与产物的独立设置；忽略框贴近文字，错误信息放在输入框下方。</summary>
@@ -153,26 +153,33 @@ namespace StopFarmingWhenReachLimit
                 return;
             }
             CropRule rule = entry.Rule;
-            bool ignored = rule.Ignore;
+            bool ignoredSowing = rule.IgnoreSowing, ignoredHarvest = rule.IgnoreHarvest;
             int lower = rule.Lower, upper = rule.Upper;
-            string ignore = "SFRL_Ignore".Translate();
-            // CheckboxLabeled 把勾选框放在矩形右端，按文字实际宽度收紧矩形使两者相邻。
-            float ignoreWidth = Text.CalcSize(ignore).x + 6f + 24f;
-            Widgets.CheckboxLabeled(new Rect(rect.x + rect.width * .55f, rect.y + 3f, ignoreWidth, 28f),
-                ignore, ref rule.Ignore);
-            Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .68f, rect.y + 3f, rect.width * .15f, 28f),
+            DrawIgnoreToggle(new Rect(rect.x + rect.width * .55f, rect.y + 3f, rect.width * .21f, 28f),
+                "SFRL_IgnoreSowing", ref rule.IgnoreSowing);
+            DrawIgnoreToggle(new Rect(rect.x + rect.width * .55f, rect.y + 31f, rect.width * .21f, 28f),
+                "SFRL_IgnoreHarvest", ref rule.IgnoreHarvest);
+            Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .77f, rect.y + 3f, rect.width * .105f, 28f),
                 ref rule.Lower, ref rule.LowerBuffer, 0f, int.MaxValue);
-            Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .84f, rect.y + 3f, rect.width * .15f, 28f),
+            Widgets.TextFieldNumeric(new Rect(rect.x + rect.width * .885f, rect.y + 3f, rect.width * .105f, 28f),
                 ref rule.Upper, ref rule.UpperBuffer, 0f, int.MaxValue);
-            if (ignored != rule.Ignore || lower != rule.Lower || upper != rule.Upper) Settings.Changed();
+            if (ignoredSowing != rule.IgnoreSowing || ignoredHarvest != rule.IgnoreHarvest || lower != rule.Lower || upper != rule.Upper) Settings.Changed();
             if (!Hysteresis.Valid(rule.Lower, rule.Upper) || rule.Lower == 0)
             {
                 GameFont old = Text.Font;
                 Text.Font = GameFont.Tiny;
-                Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y + 32f, rect.width * .45f, 24f),
+                Widgets.Label(new Rect(rect.x + rect.width * .55f, rect.y + 58f, rect.width * .45f, 22f),
                     (Hysteresis.Valid(rule.Lower, rule.Upper) ? "SFRL_ZeroLower" : "SFRL_InvalidThreshold").Translate());
                 Text.Font = old;
             }
+        }
+        /// <summary>分别绘制两类忽略开关；按实际文字宽度让勾选框紧跟文字，不把勾选框推到列末。</summary>
+        private static void DrawIgnoreToggle(Rect rect, string key, ref bool value)
+        {
+            string label = key.Translate();
+            rect.width = Text.CalcSize(label).x + 6f + 24f;
+            Widgets.CheckboxLabeled(rect, label, ref value);
+            TooltipHandler.TipRegion(rect, (key + "Tip").Translate());
         }
         /// <summary>绘制一行定义图标及名称；名称过长时截断，并用悬停提示保留全名与 defName。</summary>
         private static void DrawDefRow(Rect rect, ThingDef def)
@@ -184,6 +191,7 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 
 
 

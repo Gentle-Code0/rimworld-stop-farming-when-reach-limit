@@ -85,7 +85,7 @@ namespace StopFarmingWhenReachLimit
             foreach (CropEntry entry in CropCatalog.Entries)
             {
                 CropRule rule = entry.Rule;
-                if (!entry.Supported || rule.Ignore || !Hysteresis.Valid(rule.Lower, rule.Upper)) continue;
+                if (!entry.Supported || (rule.IgnoreSowing && rule.IgnoreHarvest) || !Hysteresis.Valid(rule.Lower, rule.Upper)) continue;
                 int index;
                 if (!productIndices.TryGetValue(entry.Product, out index))
                 {
@@ -134,17 +134,18 @@ namespace StopFarmingWhenReachLimit
         }
 
         /// <summary>查询植物的库存暂停状态；忽略、无效阈值和关闭总开关均立即解除限制。</summary>
-        public bool IsPaused(ThingDef plant)
+        public bool IsPaused(ThingDef plant, bool sowing)
         {
             List<RuntimeRule> rules;
             if (!FarmingMod.Settings.Enabled || plant == null || !byPlant.TryGetValue(plant, out rules)) return false;
-            // 任一未忽略产物仍处于滞回暂停状态，则整种作物保持暂停。
+            // 任一未忽略当前工作类别的产物仍处于滞回暂停状态，则该作物的此类工作保持暂停。
             // 查询只遍历当前作物的小型产物列表，不遍历所有规则或库存。
             foreach (RuntimeRule rule in rules)
-                if (!rule.Entry.Rule.Ignore && Hysteresis.Valid(rule.Entry.Rule.Lower, rule.Entry.Rule.Upper)
+                if (!(sowing ? rule.Entry.Rule.IgnoreSowing : rule.Entry.Rule.IgnoreHarvest) && Hysteresis.Valid(rule.Entry.Rule.Lower, rule.Entry.Rule.Upper)
                     && rule.CountAvailable && rule.Paused) return true;
             return false;
         }
     }
 }
+
 

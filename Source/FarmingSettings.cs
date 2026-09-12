@@ -18,7 +18,8 @@ namespace StopFarmingWhenReachLimit
         /// <summary>手工关联每次新建都有独立状态键，删除后重建不会继承旧存档中的暂停记忆。</summary>
         public string StateKey => FarmingSettings.Key(PlantDefName, ProductDefName)
             + (string.IsNullOrEmpty(StateId) ? "" : ":" + StateId);
-        public bool Ignore = true;
+        public bool IgnoreSowing = true;
+        public bool IgnoreHarvest = true;
         public int Lower = 500;
         public int Upper = 1500;
         // 输入缓冲只在设置界面使用，不序列化；保留输入中的暂时无效文本。
@@ -32,7 +33,12 @@ namespace StopFarmingWhenReachLimit
             Scribe_Values.Look(ref ProductDefName, "productDefName");
             Scribe_Values.Look(ref Source, "source", ProductLinkSource.Unknown);
             Scribe_Values.Look(ref StateId, "stateId");
-            Scribe_Values.Look(ref Ignore, "ignore", true);
+                        // 只读旧字段用于迁移；新字段显式写入，允许两个方向独立且不会被旧值覆盖。
+            bool legacyIgnore = true;
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+                Scribe_Values.Look(ref legacyIgnore, "ignore", true);
+            Scribe_Values.Look(ref IgnoreSowing, "ignoreSowing", legacyIgnore, forceSave: true);
+            Scribe_Values.Look(ref IgnoreHarvest, "ignoreHarvest", legacyIgnore, forceSave: true);
             Scribe_Values.Look(ref Lower, "lower", 500);
             Scribe_Values.Look(ref Upper, "upper", 1500);
         }
@@ -113,7 +119,8 @@ namespace StopFarmingWhenReachLimit
             string key = Key(rule.PlantDefName, rule.ProductDefName);
             CropRule current;
             if (!byName.TryGetValue(key, out current) || !ReferenceEquals(current, rule)) return false;
-            rule.Ignore = true;
+            rule.IgnoreSowing = true;
+            rule.IgnoreHarvest = true;
             byName.Remove(key);
             Rules.Remove(rule);
             Changed();
@@ -131,5 +138,6 @@ namespace StopFarmingWhenReachLimit
         }
     }
 }
+
 
 
